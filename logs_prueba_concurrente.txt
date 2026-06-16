@@ -1,0 +1,673 @@
+LOG PRUEBA CONCURRENTE — 2026-06-13 21:04:37
+============================================================
+[21:04:27.753] Usuario C000 intenta reservar Z0 F2C3
+[21:04:27.756] Usuario C001 intenta reservar Z0 F2C3
+[21:04:27.759] Usuario C002 intenta reservar Z0 F2C3
+[21:04:27.760] Usuario C003 intenta reservar Z0 F2C3
+[21:04:27.761] Usuario C004 intenta reservar Z0 F2C3
+[21:04:27.763] Usuario C005 intenta reservar Z0 F2C3
+[21:04:27.764] Usuario C000 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.766] Usuario C001 obtuvo reserva 713C6A99
+[21:04:27.767] Usuario C006 intenta reservar Z0 F2C3
+[21:04:27.768] Usuario C002 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.768] Usuario C007 intenta reservar Z0 F2C3
+[21:04:27.769] Usuario C003 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.770] Usuario C004 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.770] Usuario C008 intenta reservar Z0 F2C3
+[21:04:27.771] Usuario C005 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.774] Usuario C009 intenta reservar Z0 F2C3
+[21:04:27.774] Usuario C010 intenta reservar Z0 F2C3
+[21:04:27.775] Usuario C006 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.775] Usuario C011 intenta reservar Z0 F2C3
+[21:04:27.776] Usuario C007 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.776] Usuario C008 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.776] Usuario C012 intenta reservar Z0 F2C3
+[21:04:27.776] Usuario C013 intenta reservar Z0 F2C3
+[21:04:27.776] Usuario C009 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.777] Usuario C014 intenta reservar Z0 F2C3
+[21:04:27.777] Usuario C015 intenta reservar Z0 F2C3
+[21:04:27.777] Usuario C016 intenta reservar Z0 F2C3
+[21:04:27.778] Usuario C010 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.779] Usuario C017 intenta reservar Z0 F2C3
+[21:04:27.779] Usuario C011 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.780] Usuario C012 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.781] Usuario C018 intenta reservar Z0 F2C3
+[21:04:27.781] Usuario C019 intenta reservar Z0 F2C3
+[21:04:27.784] Usuario C013 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.784] Usuario C020 intenta reservar Z0 F2C3
+[21:04:27.784] Usuario C021 intenta reservar Z0 F2C3
+[21:04:27.785] Usuario C022 intenta reservar Z0 F2C3
+[21:04:27.785] Usuario C014 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.786] Usuario C015 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.786] Usuario C023 intenta reservar Z0 F2C3
+[21:04:27.787] Usuario C024 intenta reservar Z0 F2C3
+[21:04:27.787] Usuario C025 intenta reservar Z0 F2C3
+[21:04:27.788] Usuario C026 intenta reservar Z0 F2C3
+[21:04:27.788] Usuario C016 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.788] Usuario C027 intenta reservar Z0 F2C3
+[21:04:27.788] Usuario C017 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.789] Usuario C018 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.789] Usuario C028 intenta reservar Z0 F2C3
+[21:04:27.789] Usuario C029 intenta reservar Z0 F2C3
+[21:04:27.789] Usuario C019 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.789] Usuario C030 intenta reservar Z0 F2C3
+[21:04:27.790] Usuario C020 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.790] Usuario C031 intenta reservar Z0 F2C3
+[21:04:27.790] Usuario C032 intenta reservar Z0 F2C3
+[21:04:27.790] Usuario C021 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.791] Usuario C033 intenta reservar Z0 F2C3
+[21:04:27.791] Usuario C022 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.791] Usuario C023 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.793] Usuario C034 intenta reservar Z0 F2C3
+[21:04:27.794] Usuario C035 intenta reservar Z0 F2C3
+[21:04:27.794] Usuario C036 intenta reservar Z0 F2C3
+[21:04:27.794] Usuario C024 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.795] Usuario C037 intenta reservar Z0 F2C3
+[21:04:27.795] Usuario C025 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.795] Usuario C038 intenta reservar Z0 F2C3
+[21:04:27.795] Usuario C039 intenta reservar Z0 F2C3
+[21:04:27.795] Usuario C026 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.796] Usuario C040 intenta reservar Z0 F2C3
+[21:04:27.796] Usuario C027 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.796] Usuario C041 intenta reservar Z0 F2C3
+[21:04:27.796] Usuario C028 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.797] Usuario C042 intenta reservar Z0 F2C3
+[21:04:27.797] Usuario C029 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.797] Usuario C043 intenta reservar Z0 F2C3
+[21:04:27.797] Usuario C044 intenta reservar Z0 F2C3
+[21:04:27.798] Usuario C045 intenta reservar Z0 F2C3
+[21:04:27.798] Usuario C030 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.798] Usuario C031 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.799] Usuario C046 intenta reservar Z0 F2C3
+[21:04:27.800] Usuario C047 intenta reservar Z0 F2C3
+[21:04:27.801] Usuario C032 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.801] Usuario C048 intenta reservar Z0 F2C3
+[21:04:27.802] Usuario C049 intenta reservar Z0 F2C3
+[21:04:27.802] Usuario C033 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.803] Usuario C034 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.803] Usuario C035 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.805] Usuario C036 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.807] Usuario C037 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.808] Usuario C038 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.809] Usuario C039 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.809] Usuario C040 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.810] Usuario C041 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.810] Usuario C042 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.811] Usuario C043 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.812] Usuario C044 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.813] Usuario C045 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.814] Usuario C046 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.815] Usuario C047 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.816] Usuario C048 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:27.816] Usuario C049 RECHAZADO: El asiento F2C3 ya fue reservado por otro usuario
+[21:04:29.691] Usuario C001 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:31.696] Usuario R000 intenta reservar Z4 F2C9
+[21:04:31.696] Usuario R001 intenta reservar Z2 F7C3
+[21:04:31.696] Usuario R002 intenta reservar Z1 F6C1
+[21:04:31.697] Usuario R003 intenta reservar Z1 F8C8
+[21:04:31.697] Usuario R004 intenta reservar Z3 F0C13
+[21:04:31.697] Usuario R005 intenta reservar Z4 F12C12
+[21:04:31.697] Usuario R006 intenta reservar Z3 F4C5
+[21:04:31.698] Usuario R007 intenta reservar Z3 F2C17
+[21:04:31.698] Usuario R008 intenta reservar Z3 F2C15
+[21:04:31.698] Usuario R009 intenta reservar Z2 F2C2
+[21:04:31.699] Usuario R010 intenta reservar Z1 F2C2
+[21:04:31.701] Usuario R011 intenta reservar Z3 F1C6
+[21:04:31.701] Usuario R000 obtuvo reserva DBD6BD95
+[21:04:31.701] Usuario R012 intenta reservar Z4 F3C18
+[21:04:31.703] Usuario R013 intenta reservar Z3 F3C6
+[21:04:31.704] Usuario R014 intenta reservar Z1 F9C3
+[21:04:31.704] Usuario R015 intenta reservar Z0 F2C4
+[21:04:31.705] Usuario R016 intenta reservar Z0 F3C9
+[21:04:31.705] Usuario R017 intenta reservar Z1 F3C8
+[21:04:31.705] Usuario R001 obtuvo reserva F4E852D7
+[21:04:31.706] Usuario R018 intenta reservar Z3 F8C19
+[21:04:31.707] Usuario R019 intenta reservar Z3 F2C12
+[21:04:31.707] Usuario R020 intenta reservar Z3 F8C0
+[21:04:31.708] Usuario R021 intenta reservar Z3 F6C12
+[21:04:31.708] Usuario R002 obtuvo reserva 7E2B8067
+[21:04:31.711] Usuario R022 intenta reservar Z3 F5C13
+[21:04:31.711] Usuario R023 intenta reservar Z3 F8C1
+[21:04:31.711] Usuario R024 intenta reservar Z1 F7C7
+[21:04:31.712] Usuario R003 obtuvo reserva 882EB074
+[21:04:31.714] Usuario R025 intenta reservar Z2 F1C6
+[21:04:31.714] Usuario R026 intenta reservar Z1 F5C2
+[21:04:31.714] Usuario R027 intenta reservar Z1 F1C7
+[21:04:31.714] Usuario R028 intenta reservar Z0 F4C4
+[21:04:31.716] Usuario R004 obtuvo reserva 16B58243
+[21:04:31.717] Usuario R029 intenta reservar Z4 F7C10
+[21:04:31.717] Usuario R030 intenta reservar Z1 F4C3
+[21:04:31.719] Usuario R005 obtuvo reserva 8943071F
+[21:04:31.720] Usuario R031 intenta reservar Z2 F5C1
+[21:04:31.721] Usuario R032 intenta reservar Z2 F2C2
+[21:04:31.721] Usuario R033 intenta reservar Z0 F2C2
+[21:04:31.722] Usuario R034 intenta reservar Z1 F5C6
+[21:04:31.724] Usuario R035 intenta reservar Z0 F3C4
+[21:04:31.724] Usuario R006 obtuvo reserva 7B5BB3B7
+[21:04:31.725] Usuario R036 intenta reservar Z2 F7C8
+[21:04:31.725] Usuario R037 intenta reservar Z0 F0C9
+[21:04:31.725] Usuario R038 intenta reservar Z2 F1C1
+[21:04:31.726] Usuario R039 intenta reservar Z3 F6C8
+[21:04:31.726] Usuario R040 intenta reservar Z2 F1C9
+[21:04:31.727] Usuario R041 intenta reservar Z0 F4C5
+[21:04:31.728] Usuario R007 obtuvo reserva 81A3EDC0
+[21:04:31.728] Usuario R042 intenta reservar Z0 F2C3
+[21:04:31.731] Usuario R043 intenta reservar Z4 F3C14
+[21:04:31.731] Usuario R044 intenta reservar Z2 F4C5
+[21:04:31.731] Usuario R045 intenta reservar Z4 F14C14
+[21:04:31.733] Usuario R046 intenta reservar Z3 F6C10
+[21:04:31.733] Usuario R008 obtuvo reserva D7CE16B8
+[21:04:31.734] Usuario R047 intenta reservar Z2 F4C2
+[21:04:31.735] Usuario R048 intenta reservar Z2 F6C6
+[21:04:31.736] Usuario R049 intenta reservar Z3 F4C2
+[21:04:31.737] Usuario R009 obtuvo reserva F0A22BB1
+[21:04:31.738] Usuario R050 intenta reservar Z0 F2C4
+[21:04:31.738] Usuario R051 intenta reservar Z4 F6C3
+[21:04:31.739] Usuario R052 intenta reservar Z1 F7C7
+[21:04:31.739] Usuario R053 intenta reservar Z2 F8C7
+[21:04:31.739] Usuario R054 intenta reservar Z3 F1C12
+[21:04:31.740] Usuario R055 intenta reservar Z4 F4C5
+[21:04:31.740] Usuario R056 intenta reservar Z0 F4C2
+[21:04:31.740] Usuario R057 intenta reservar Z0 F2C5
+[21:04:31.741] Usuario R058 intenta reservar Z3 F3C3
+[21:04:31.742] Usuario R059 intenta reservar Z2 F8C4
+[21:04:31.743] Usuario R010 obtuvo reserva 0A0A59F7
+[21:04:31.744] Usuario R060 intenta reservar Z3 F6C2
+[21:04:31.747] Usuario R061 intenta reservar Z3 F6C16
+[21:04:31.747] Usuario R062 intenta reservar Z0 F0C1
+[21:04:31.748] Usuario R011 obtuvo reserva 182ECA45
+[21:04:31.748] Usuario R063 intenta reservar Z4 F12C17
+[21:04:31.749] Usuario R064 intenta reservar Z4 F5C14
+[21:04:31.749] Usuario R065 intenta reservar Z1 F6C0
+[21:04:31.749] Usuario R066 intenta reservar Z0 F4C2
+[21:04:31.749] Usuario R067 intenta reservar Z3 F7C5
+[21:04:31.751] Usuario R068 intenta reservar Z3 F9C7
+[21:04:31.752] Usuario R069 intenta reservar Z1 F2C5
+[21:04:31.754] Usuario R070 intenta reservar Z2 F6C4
+[21:04:31.754] Usuario R071 intenta reservar Z3 F1C9
+[21:04:31.755] Usuario R012 obtuvo reserva 40515953
+[21:04:31.755] Usuario R072 intenta reservar Z3 F5C8
+[21:04:31.755] Usuario R073 intenta reservar Z1 F0C8
+[21:04:31.756] Usuario R074 intenta reservar Z2 F2C5
+[21:04:31.756] Usuario R075 intenta reservar Z4 F13C5
+[21:04:31.756] Usuario R076 intenta reservar Z0 F2C6
+[21:04:31.757] Usuario R077 intenta reservar Z2 F6C4
+[21:04:31.758] Usuario R013 obtuvo reserva AB321844
+[21:04:31.758] Usuario R078 intenta reservar Z2 F7C0
+[21:04:31.759] Usuario R079 intenta reservar Z3 F1C8
+[21:04:31.760] Usuario R014 obtuvo reserva 17D670F8
+[21:04:31.760] Usuario R080 intenta reservar Z3 F6C11
+[21:04:31.761] Usuario R081 intenta reservar Z4 F1C15
+[21:04:31.761] Usuario R082 intenta reservar Z0 F0C5
+[21:04:31.762] Usuario R083 intenta reservar Z4 F8C19
+[21:04:31.763] Usuario R084 intenta reservar Z4 F7C18
+[21:04:31.763] Usuario R085 intenta reservar Z2 F8C3
+[21:04:31.764] Usuario R015 obtuvo reserva 1654D868
+[21:04:31.765] Usuario R086 intenta reservar Z2 F2C7
+[21:04:31.765] Usuario R087 intenta reservar Z3 F1C1
+[21:04:31.766] Usuario R088 intenta reservar Z2 F9C9
+[21:04:31.766] Usuario R089 intenta reservar Z0 F0C0
+[21:04:31.766] Usuario R090 intenta reservar Z4 F7C4
+[21:04:31.767] Usuario R091 intenta reservar Z3 F0C12
+[21:04:31.767] Usuario R092 intenta reservar Z0 F3C5
+[21:04:31.768] Usuario R093 intenta reservar Z4 F14C12
+[21:04:31.768] Usuario R032 RECHAZADO: El asiento F2C2 ya fue reservado por otro usuario
+[21:04:31.769] Usuario R094 intenta reservar Z4 F11C14
+[21:04:31.769] Usuario R016 obtuvo reserva A2485806
+[21:04:31.769] Usuario R095 intenta reservar Z2 F2C5
+[21:04:31.770] Usuario R096 intenta reservar Z3 F6C16
+[21:04:31.770] Usuario R097 intenta reservar Z2 F5C1
+[21:04:31.773] Usuario R098 intenta reservar Z1 F1C6
+[21:04:31.773] Usuario R017 obtuvo reserva 9594E974
+[21:04:31.774] Usuario R099 intenta reservar Z3 F3C2
+[21:04:31.774] Usuario R100 intenta reservar Z1 F2C3
+[21:04:31.775] Usuario R101 intenta reservar Z1 F9C8
+[21:04:31.775] Usuario R102 intenta reservar Z4 F12C15
+[21:04:31.776] Usuario R103 intenta reservar Z0 F4C1
+[21:04:31.777] Usuario R018 obtuvo reserva F93A4EA5
+[21:04:31.781] Usuario R104 intenta reservar Z1 F3C7
+[21:04:31.782] Usuario R019 obtuvo reserva E486853F
+[21:04:31.783] Usuario R105 intenta reservar Z2 F3C1
+[21:04:31.783] Usuario R106 intenta reservar Z2 F6C8
+[21:04:31.786] Usuario R107 intenta reservar Z3 F0C6
+[21:04:31.788] Usuario R108 intenta reservar Z2 F6C2
+[21:04:31.790] Usuario R020 obtuvo reserva 5FEB9D00
+[21:04:31.791] Usuario R109 intenta reservar Z0 F1C4
+[21:04:31.793] Usuario R110 intenta reservar Z0 F0C9
+[21:04:31.795] Usuario R111 intenta reservar Z1 F4C1
+[21:04:31.796] Usuario R021 obtuvo reserva EF4E6D7C
+[21:04:31.804] Usuario R112 intenta reservar Z4 F4C12
+[21:04:31.812] Usuario R022 obtuvo reserva 6F2A4C3A
+[21:04:31.815] Usuario R042 RECHAZADO: El asiento F2C3 ya fue vendido
+[21:04:31.816] Usuario R023 obtuvo reserva 745E8E7C
+[21:04:31.821] Usuario R113 intenta reservar Z4 F3C12
+[21:04:31.828] Usuario R024 obtuvo reserva 7311C164
+[21:04:31.831] Usuario R114 intenta reservar Z2 F9C1
+[21:04:31.833] Usuario R025 obtuvo reserva C8DF835B
+[21:04:31.837] Usuario R115 intenta reservar Z1 F3C8
+[21:04:31.842] Usuario R026 obtuvo reserva E5CBC796
+[21:04:31.847] Usuario R116 intenta reservar Z4 F1C17
+[21:04:31.850] Usuario R027 obtuvo reserva 997328E0
+[21:04:31.851] Usuario R117 intenta reservar Z1 F5C5
+[21:04:31.852] Usuario R118 intenta reservar Z1 F8C9
+[21:04:31.853] Usuario R119 intenta reservar Z2 F5C9
+[21:04:31.853] Usuario R028 obtuvo reserva 4103C676
+[21:04:31.857] Usuario R120 intenta reservar Z3 F9C15
+[21:04:31.859] Usuario R121 intenta reservar Z1 F1C9
+[21:04:31.860] Usuario R122 intenta reservar Z3 F9C0
+[21:04:31.861] Usuario R029 obtuvo reserva 3D17F5F9
+[21:04:31.864] Usuario R123 intenta reservar Z2 F0C9
+[21:04:31.867] Usuario R124 intenta reservar Z0 F2C5
+[21:04:31.868] Usuario R030 obtuvo reserva C69204D6
+[21:04:31.871] Usuario R125 intenta reservar Z2 F1C8
+[21:04:31.873] Usuario R126 intenta reservar Z3 F4C0
+[21:04:31.874] Usuario R031 obtuvo reserva 503D53B1
+[21:04:31.874] Usuario R127 intenta reservar Z4 F14C16
+[21:04:31.875] Usuario R128 intenta reservar Z1 F2C9
+[21:04:31.875] Usuario R129 intenta reservar Z0 F4C1
+[21:04:31.877] Usuario R130 intenta reservar Z0 F0C5
+[21:04:31.878] Usuario R131 intenta reservar Z0 F3C2
+[21:04:31.879] Usuario R033 obtuvo reserva 39CF8239
+[21:04:31.880] Usuario R132 intenta reservar Z2 F1C7
+[21:04:31.880] Usuario R133 intenta reservar Z2 F6C1
+[21:04:31.883] Usuario R050 RECHAZADO: El asiento F2C4 ya fue reservado por otro usuario
+[21:04:31.884] Usuario R134 intenta reservar Z2 F0C4
+[21:04:31.885] Usuario R034 obtuvo reserva ADEFD9E2
+[21:04:31.886] Usuario R135 intenta reservar Z3 F3C15
+[21:04:31.887] Usuario R136 intenta reservar Z0 F1C2
+[21:04:31.887] Usuario R137 intenta reservar Z3 F3C14
+[21:04:31.888] Usuario R052 RECHAZADO: El asiento F7C7 ya fue reservado por otro usuario
+[21:04:31.891] Usuario R138 intenta reservar Z2 F4C0
+[21:04:31.891] Usuario R035 obtuvo reserva 68878ADB
+[21:04:31.894] Usuario R139 intenta reservar Z1 F5C5
+[21:04:31.895] Usuario R140 intenta reservar Z0 F3C7
+[21:04:31.897] Usuario R141 intenta reservar Z4 F12C5
+[21:04:31.898] Usuario R036 obtuvo reserva 2475C504
+[21:04:31.898] Usuario R142 intenta reservar Z4 F0C15
+[21:04:31.898] Usuario R143 intenta reservar Z1 F0C1
+[21:04:31.899] Usuario R144 intenta reservar Z0 F2C3
+[21:04:31.900] Usuario R145 intenta reservar Z4 F8C14
+[21:04:31.900] Usuario R146 intenta reservar Z0 F3C4
+[21:04:31.901] Usuario R037 obtuvo reserva 92E45755
+[21:04:31.904] Usuario R147 intenta reservar Z2 F9C8
+[21:04:31.906] Usuario R148 intenta reservar Z3 F1C15
+[21:04:31.906] Usuario R149 intenta reservar Z1 F6C5
+[21:04:31.907] Usuario R150 intenta reservar Z3 F6C5
+[21:04:31.908] Usuario R038 obtuvo reserva 7CA42FD6
+[21:04:31.908] Usuario R151 intenta reservar Z3 F6C7
+[21:04:31.909] Usuario R152 intenta reservar Z2 F1C9
+[21:04:31.909] Usuario R153 intenta reservar Z0 F3C3
+[21:04:31.909] Usuario R154 intenta reservar Z0 F2C3
+[21:04:31.912] Usuario R155 intenta reservar Z1 F5C4
+[21:04:31.912] Usuario R156 intenta reservar Z0 F2C9
+[21:04:31.913] Usuario R157 intenta reservar Z2 F6C7
+[21:04:31.914] Usuario R039 obtuvo reserva 3E530AB8
+[21:04:31.914] Usuario R158 intenta reservar Z3 F6C12
+[21:04:31.915] Usuario R159 intenta reservar Z2 F1C7
+[21:04:31.916] Usuario R160 intenta reservar Z2 F9C2
+[21:04:31.916] Usuario R161 intenta reservar Z4 F6C3
+[21:04:31.918] Usuario R040 obtuvo reserva E85316EB
+[21:04:31.923] Usuario R162 intenta reservar Z4 F11C9
+[21:04:31.925] Usuario R163 intenta reservar Z3 F1C14
+[21:04:31.927] Usuario R041 obtuvo reserva DA08B77D
+[21:04:31.928] Usuario R164 intenta reservar Z3 F3C19
+[21:04:31.929] Usuario R165 intenta reservar Z1 F8C1
+[21:04:31.930] Usuario R166 intenta reservar Z2 F1C8
+[21:04:31.932] Usuario R167 intenta reservar Z2 F0C7
+[21:04:31.934] Usuario R168 intenta reservar Z0 F2C8
+[21:04:31.935] Usuario R043 obtuvo reserva C587654E
+[21:04:31.937] Usuario R066 RECHAZADO: El asiento F4C2 ya fue reservado por otro usuario
+[21:04:31.937] Usuario R169 intenta reservar Z4 F9C0
+[21:04:31.940] Usuario R170 intenta reservar Z4 F9C18
+[21:04:31.942] Usuario R171 intenta reservar Z4 F6C3
+[21:04:31.943] Usuario R172 intenta reservar Z4 F11C15
+[21:04:31.946] Usuario R173 intenta reservar Z2 F7C1
+[21:04:31.947] Usuario R045 obtuvo reserva 172BCFAD
+[21:04:31.950] Usuario R174 intenta reservar Z2 F0C7
+[21:04:31.951] Usuario R175 intenta reservar Z1 F5C8
+[21:04:31.951] Usuario R176 intenta reservar Z4 F0C0
+[21:04:31.954] Usuario R177 intenta reservar Z3 F6C2
+[21:04:31.956] Usuario R178 intenta reservar Z4 F8C8
+[21:04:31.958] Usuario R044 obtuvo reserva 5701C50C
+[21:04:31.959] Usuario R179 intenta reservar Z2 F7C0
+[21:04:31.959] Usuario R180 intenta reservar Z3 F5C11
+[21:04:31.962] Usuario R181 intenta reservar Z1 F7C7
+[21:04:31.963] Usuario R182 intenta reservar Z2 F4C1
+[21:04:31.964] Usuario R183 intenta reservar Z1 F0C2
+[21:04:31.964] Usuario R184 intenta reservar Z4 F3C3
+[21:04:31.965] Usuario R046 obtuvo reserva 162256AC
+[21:04:31.967] Usuario R185 intenta reservar Z1 F3C5
+[21:04:31.969] Usuario R186 intenta reservar Z4 F13C16
+[21:04:31.969] Usuario R187 intenta reservar Z2 F2C9
+[21:04:31.970] Usuario R188 intenta reservar Z3 F6C17
+[21:04:31.971] Usuario R189 intenta reservar Z3 F7C1
+[21:04:31.971] Usuario R047 obtuvo reserva 3889228A
+[21:04:31.972] Usuario R190 intenta reservar Z4 F6C18
+[21:04:31.975] Usuario R191 intenta reservar Z0 F4C0
+[21:04:31.975] Usuario R192 intenta reservar Z4 F0C11
+[21:04:31.976] Usuario R193 intenta reservar Z2 F7C6
+[21:04:31.976] Usuario R194 intenta reservar Z0 F1C9
+[21:04:31.976] Usuario R195 intenta reservar Z0 F2C4
+[21:04:31.977] Usuario R196 intenta reservar Z4 F13C12
+[21:04:31.977] Usuario R048 obtuvo reserva FA0E182C
+[21:04:31.978] Usuario R197 intenta reservar Z0 F4C4
+[21:04:31.982] Usuario R198 intenta reservar Z0 F0C7
+[21:04:31.984] Usuario R077 RECHAZADO: El asiento F6C4 ya fue reservado por otro usuario
+[21:04:31.984] Usuario R049 obtuvo reserva 8364B11C
+[21:04:31.985] Usuario R199 intenta reservar Z4 F0C9
+[21:04:31.988] Usuario R051 obtuvo reserva 0D359795
+[21:04:31.992] Usuario R053 obtuvo reserva 39194691
+[21:04:31.998] Usuario R054 obtuvo reserva BD30F4C5
+[21:04:32.006] Usuario R056 obtuvo reserva 687F9B32
+[21:04:32.013] Usuario R055 obtuvo reserva 5DD14762
+[21:04:32.018] Usuario R057 obtuvo reserva 659DC2C8
+[21:04:32.024] Usuario R058 obtuvo reserva B18BB389
+[21:04:32.029] Usuario R059 obtuvo reserva 0846E515
+[21:04:32.036] Usuario R060 obtuvo reserva E82D5B3F
+[21:04:32.037] Usuario R095 RECHAZADO: El asiento F2C5 ya fue reservado por otro usuario
+[21:04:32.040] Usuario R061 obtuvo reserva FAD54E75
+[21:04:32.040] Usuario R096 RECHAZADO: El asiento F6C16 ya fue reservado por otro usuario
+[21:04:32.041] Usuario R097 RECHAZADO: El asiento F5C1 ya fue reservado por otro usuario
+[21:04:32.045] Usuario R062 obtuvo reserva 974A58F5
+[21:04:32.050] Usuario R063 obtuvo reserva B39A75D6
+[21:04:32.055] Usuario R064 obtuvo reserva A595FC3B
+[21:04:32.059] Usuario R065 obtuvo reserva 49140466
+[21:04:32.063] Usuario R067 obtuvo reserva BDE1B6CF
+[21:04:32.069] Usuario R068 obtuvo reserva 20B67404
+[21:04:32.073] Usuario R069 obtuvo reserva 3B5A956A
+[21:04:32.074] Usuario R110 RECHAZADO: El asiento F0C9 ya fue reservado por otro usuario
+[21:04:32.078] Usuario R070 obtuvo reserva E0FCA82F
+[21:04:32.084] Usuario R071 obtuvo reserva 020255AD
+[21:04:32.089] Usuario R115 RECHAZADO: El asiento F3C8 ya fue reservado por otro usuario
+[21:04:32.089] Usuario R072 obtuvo reserva C816E9BE
+[21:04:32.096] Usuario R073 obtuvo reserva 25CE03CC
+[21:04:32.100] Usuario R074 obtuvo reserva 404D7924
+[21:04:32.105] Usuario R075 obtuvo reserva 291FCD32
+[21:04:32.110] Usuario R124 RECHAZADO: El asiento F2C5 ya fue reservado por otro usuario
+[21:04:32.110] Usuario R076 obtuvo reserva 9A95370E
+[21:04:32.116] Usuario R078 obtuvo reserva 64532DBA
+[21:04:32.123] Usuario R079 obtuvo reserva B07CFE12
+[21:04:32.125] Usuario R129 RECHAZADO: El asiento F4C1 ya fue reservado por otro usuario
+[21:04:32.129] Usuario R130 RECHAZADO: El asiento F0C5 ya fue reservado por otro usuario
+[21:04:32.129] Usuario R081 obtuvo reserva E9177791
+[21:04:32.136] Usuario R080 obtuvo reserva 1E50568E
+[21:04:32.142] Usuario R082 obtuvo reserva B82D5029
+[21:04:32.148] Usuario R083 obtuvo reserva 4BF501F7
+[21:04:32.154] Usuario R084 obtuvo reserva D612AB61
+[21:04:32.155] Usuario R139 RECHAZADO: El asiento F5C5 ya fue reservado por otro usuario
+[21:04:32.159] Usuario R085 obtuvo reserva 4E4AAFA0
+[21:04:32.166] Usuario R086 obtuvo reserva 4C47EB6C
+[21:04:32.167] Usuario R144 RECHAZADO: El asiento F2C3 ya fue vendido
+[21:04:32.173] Usuario R087 obtuvo reserva 9C70A4DD
+[21:04:32.174] Usuario R146 RECHAZADO: El asiento F3C4 ya fue reservado por otro usuario
+[21:04:32.178] Usuario R088 obtuvo reserva 70CBC446
+[21:04:32.185] Usuario R089 obtuvo reserva 1AEBFEC9
+[21:04:32.193] Usuario R090 obtuvo reserva 6AF45B06
+[21:04:32.194] Usuario R152 RECHAZADO: El asiento F1C9 ya fue reservado por otro usuario
+[21:04:32.200] Usuario R091 obtuvo reserva 83E59F66
+[21:04:32.200] Usuario R154 RECHAZADO: El asiento F2C3 ya fue vendido
+[21:04:32.208] Usuario R093 obtuvo reserva 6693FD3D
+[21:04:32.211] Usuario R158 RECHAZADO: El asiento F6C12 ya fue reservado por otro usuario
+[21:04:32.216] Usuario R092 obtuvo reserva 7568D46A
+[21:04:32.216] Usuario R159 RECHAZADO: El asiento F1C7 ya fue reservado por otro usuario
+[21:04:32.222] Usuario R094 obtuvo reserva F3FED0DB
+[21:04:32.223] Usuario R161 RECHAZADO: El asiento F6C3 ya fue reservado por otro usuario
+[21:04:32.230] Usuario R098 obtuvo reserva 71823826
+[21:04:32.238] Usuario R099 obtuvo reserva 182E6747
+[21:04:32.239] Usuario R166 RECHAZADO: El asiento F1C8 ya fue reservado por otro usuario
+[21:04:32.245] Usuario R100 obtuvo reserva 34779FE8
+[21:04:32.253] Usuario R101 obtuvo reserva C817D645
+[21:04:32.254] Usuario R171 RECHAZADO: El asiento F6C3 ya fue reservado por otro usuario
+[21:04:32.261] Usuario R102 obtuvo reserva 9C5EC17B
+[21:04:32.268] Usuario R174 RECHAZADO: El asiento F0C7 ya fue reservado por otro usuario
+[21:04:32.268] Usuario R103 obtuvo reserva D11937D7
+[21:04:32.275] Usuario R177 RECHAZADO: El asiento F6C2 ya fue reservado por otro usuario
+[21:04:32.275] Usuario R104 obtuvo reserva 955F3D6A
+[21:04:32.282] Usuario R179 RECHAZADO: El asiento F7C0 ya fue reservado por otro usuario
+[21:04:32.282] Usuario R105 obtuvo reserva 529B63D7
+[21:04:32.290] Usuario R181 RECHAZADO: El asiento F7C7 ya fue reservado por otro usuario
+[21:04:32.291] Usuario R106 obtuvo reserva 02BDF00F
+[21:04:32.298] Usuario R107 obtuvo reserva 97B0A75E
+[21:04:32.305] Usuario R108 obtuvo reserva A57E4C1B
+[21:04:32.314] Usuario R109 obtuvo reserva 21AD0B35
+[21:04:32.321] Usuario R111 obtuvo reserva 39DD750D
+[21:04:32.329] Usuario R112 obtuvo reserva 48FD3F47
+[21:04:32.336] Usuario R113 obtuvo reserva B8AC8B98
+[21:04:32.338] Usuario R195 RECHAZADO: El asiento F2C4 ya fue reservado por otro usuario
+[21:04:32.345] Usuario R114 obtuvo reserva 9C2866CE
+[21:04:32.356] Usuario R197 RECHAZADO: El asiento F4C4 ya fue reservado por otro usuario
+[21:04:32.357] Usuario R117 obtuvo reserva 4F4F5BC8
+[21:04:32.366] Usuario R118 obtuvo reserva F38E5026
+[21:04:32.367] Usuario R005 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.377] Usuario R116 obtuvo reserva 060B4291
+[21:04:32.390] Usuario R119 obtuvo reserva B292F546
+[21:04:32.398] Usuario R120 obtuvo reserva 4E1B96D9
+[21:04:32.406] Usuario R121 obtuvo reserva CE28A26F
+[21:04:32.414] Usuario R122 obtuvo reserva F7D5D7EA
+[21:04:32.420] Usuario R123 obtuvo reserva 569AA307
+[21:04:32.427] Usuario R125 obtuvo reserva 935DCADA
+[21:04:32.435] Usuario R126 obtuvo reserva AD666F2D
+[21:04:32.444] Usuario R127 obtuvo reserva 60A3A3B3
+[21:04:32.454] Usuario R128 obtuvo reserva 5B65370B
+[21:04:32.454] Usuario R030 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.462] Usuario R131 obtuvo reserva CA8878A5
+[21:04:32.469] Usuario R132 obtuvo reserva 4332A801
+[21:04:32.476] Usuario R133 obtuvo reserva ED44C261
+[21:04:32.476] Usuario R043 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.483] Usuario R134 obtuvo reserva 8343B197
+[21:04:32.488] Usuario R135 obtuvo reserva 5855747C
+[21:04:32.494] Usuario R024 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.494] Usuario R136 obtuvo reserva 28785664
+[21:04:32.499] Usuario R137 obtuvo reserva 59B633B0
+[21:04:32.508] Usuario R138 obtuvo reserva 838DA71F
+[21:04:32.518] Usuario R140 obtuvo reserva B7454564
+[21:04:32.527] Usuario R141 obtuvo reserva DBD2FBF9
+[21:04:32.536] Usuario R142 obtuvo reserva 0D57CCD4
+[21:04:32.542] Usuario R143 obtuvo reserva DF5694F3
+[21:04:32.549] Usuario R145 obtuvo reserva 9881E962
+[21:04:32.558] Usuario R147 obtuvo reserva C9AFFDA5
+[21:04:32.567] Usuario R148 obtuvo reserva 1DBF70D5
+[21:04:32.574] Usuario R149 obtuvo reserva 26E33FAC
+[21:04:32.582] Usuario R150 obtuvo reserva 2D2B25FE
+[21:04:32.582] Usuario R021 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.592] Usuario R151 obtuvo reserva 1B4B0797
+[21:04:32.599] Usuario R039 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.600] Usuario R153 obtuvo reserva F2195360
+[21:04:32.607] Usuario R155 obtuvo reserva EA532084
+[21:04:32.615] Usuario R156 obtuvo reserva D8D82EEA
+[21:04:32.620] Usuario R157 obtuvo reserva 3DE8C47A
+[21:04:32.627] Usuario R160 obtuvo reserva 8B57FA80
+[21:04:32.631] Usuario R162 obtuvo reserva 9A50AC89
+[21:04:32.637] Usuario R163 obtuvo reserva 9590FD24
+[21:04:32.643] Usuario R164 obtuvo reserva B8B68ED4
+[21:04:32.648] Usuario R165 obtuvo reserva BAD43FE3
+[21:04:32.653] Usuario R167 obtuvo reserva DD4DAB48
+[21:04:32.659] Usuario R168 obtuvo reserva D854136E
+[21:04:32.665] Usuario R169 obtuvo reserva F740D211
+[21:04:32.672] Usuario R170 obtuvo reserva BC896BC7
+[21:04:32.679] Usuario R172 obtuvo reserva B2097C1F
+[21:04:32.686] Usuario R173 obtuvo reserva EF243818
+[21:04:32.693] Usuario R175 obtuvo reserva 36DBDAD1
+[21:04:32.699] Usuario R176 obtuvo reserva FFE2CB41
+[21:04:32.706] Usuario R178 obtuvo reserva 14F50363
+[21:04:32.712] Usuario R180 obtuvo reserva 88AA951C
+[21:04:32.713] Usuario R001 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.718] Usuario R182 obtuvo reserva DA329CD9
+[21:04:32.724] Usuario R183 obtuvo reserva 4AF0EB78
+[21:04:32.729] Usuario R184 obtuvo reserva 30FD3DEB
+[21:04:32.734] Usuario R185 obtuvo reserva 68145C0F
+[21:04:32.740] Usuario R186 obtuvo reserva 2CF89C9E
+[21:04:32.747] Usuario R187 obtuvo reserva B8D4C258
+[21:04:32.753] Usuario R188 obtuvo reserva C0B52890
+[21:04:32.753] Usuario R055 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.759] Usuario R189 obtuvo reserva 5452C085
+[21:04:32.765] Usuario R190 obtuvo reserva 6CEDD35C
+[21:04:32.771] Usuario R099 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.772] Usuario R191 obtuvo reserva DA4DAEDE
+[21:04:32.778] Usuario R192 obtuvo reserva 9F57DA89
+[21:04:32.785] Usuario R034 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.786] Usuario R193 obtuvo reserva 64F7C2EC
+[21:04:32.791] Usuario R194 obtuvo reserva 539B748E
+[21:04:32.792] Usuario R013 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.797] Usuario R196 obtuvo reserva B1535B03
+[21:04:32.803] Usuario R198 obtuvo reserva 41371B1D
+[21:04:32.810] Usuario R199 obtuvo reserva DF0B80D3
+[21:04:32.851] Usuario R004 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.890] Usuario R014 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.895] Usuario R072 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:32.939] Usuario R003 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.024] Usuario R037 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.027] Usuario R094 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.047] Usuario R111 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.110] Usuario R062 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.117] Usuario R109 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.122] Usuario R046 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.122] Usuario R056 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.149] Usuario R114 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.168] Usuario R084 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.172] Usuario R006 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.190] Usuario R164 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.204] Usuario R010 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.204] Usuario R008 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.226] Usuario R082 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.247] Usuario R103 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.260] Usuario R070 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.266] Usuario R116 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.289] Usuario R076 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.310] Usuario R007 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.315] Usuario R123 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.318] Usuario R048 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.321] Usuario R162 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.322] Usuario R011 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.367] Usuario R058 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.388] Usuario R053 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.391] Usuario R169 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.392] Usuario R199 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.415] Usuario R064 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.420] Usuario R176 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.426] Usuario R128 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.462] Usuario R138 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.468] Usuario R067 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.483] Usuario R085 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.487] Usuario R190 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.519] Usuario R165 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.536] Usuario R026 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.550] Usuario R122 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.566] Usuario R073 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.598] Usuario R170 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.636] Usuario R107 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.640] Usuario R031 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.653] Usuario R175 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.665] Usuario R019 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.667] Usuario R100 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.667] Usuario R029 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.700] Usuario R153 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.706] Usuario R087 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.713] Usuario R108 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.784] Usuario R106 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.801] Usuario R135 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.828] Usuario R131 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.856] Usuario R185 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.868] Usuario R033 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.949] Usuario R079 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.963] Usuario R023 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.985] Usuario R163 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:33.997] Usuario R143 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.001] Usuario R051 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.015] Usuario R000 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.023] Usuario R047 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.023] Usuario R022 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.039] Usuario R074 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.050] Usuario R186 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.051] Usuario R121 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.056] Usuario R041 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.078] Usuario R002 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.082] Usuario R145 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.168] Usuario R083 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.175] Usuario R086 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.197] Usuario R078 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.209] Usuario R180 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.216] Usuario R188 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.225] Usuario R112 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.230] Usuario R075 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.231] Usuario R065 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.235] Usuario R173 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.267] Usuario R027 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.268] Usuario R091 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.272] Usuario R020 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.289] Usuario R132 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.291] Usuario R134 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.300] Usuario R049 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.302] Usuario R167 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.308] Usuario R044 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.320] Usuario R196 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.334] Usuario R069 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.343] Usuario R017 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.349] Usuario R090 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.358] Usuario R012 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.411] Usuario R054 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.420] Usuario R183 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.428] Usuario R016 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.446] Usuario R157 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.450] Usuario R133 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.458] Usuario R184 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.478] Usuario R057 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.485] Usuario R028 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.501] Usuario R080 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.516] Usuario R155 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.526] Usuario R136 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.529] Usuario R035 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.545] Usuario R036 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.553] Usuario R071 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.566] Usuario R009 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.570] Usuario R059 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.587] Usuario R025 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.589] Usuario R081 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.594] Usuario R045 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.596] Usuario R117 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.620] Usuario R040 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.651] Usuario R018 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.664] Usuario R093 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.672] Usuario R194 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.684] Usuario R015 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.691] Usuario R063 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.701] Usuario R068 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.711] Usuario R119 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.712] Usuario R102 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.756] Usuario R104 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.761] Usuario R120 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.766] Usuario R156 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.773] Usuario R148 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.775] Usuario R140 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.785] Usuario R149 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.802] Usuario R038 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.806] Usuario R160 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.846] Usuario R089 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.872] Usuario R118 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.875] Usuario R061 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.888] Usuario R088 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.906] Usuario R126 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.919] Usuario R189 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.937] Usuario R127 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.958] Usuario R142 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.988] Usuario R105 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:34.992] Usuario R060 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.014] Usuario R151 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.025] Usuario R113 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.032] Usuario R193 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.039] Usuario R098 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.071] Usuario R182 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.079] Usuario R092 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.124] Usuario R168 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.149] Usuario R147 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.204] Usuario R125 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.212] Usuario R137 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.242] Usuario R101 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.254] Usuario R141 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.314] Usuario R198 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.334] Usuario R150 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.421] Usuario R191 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.464] Usuario R172 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.484] Usuario R192 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.547] Usuario R178 error de conexion: Expecting value: line 1 column 1 (char 0)
+[21:04:35.672] Usuario R187 error de conexion: Expecting value: line 1 column 1 (char 0)
