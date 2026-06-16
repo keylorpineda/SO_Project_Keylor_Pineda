@@ -1,0 +1,42 @@
+name: Compilar para macOS
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:  # Permite ejecutarlo manualmente desde la pestaña Actions
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+    - name: Descargar repositorio
+      uses: actions/checkout@v3
+
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Instalar dependencias
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller fpdf2 PyQt6
+        
+        # En caso de que exista un requirements.txt, también lo instalamos:
+        if [ -f "requirements.txt" ]; then pip install -r requirements.txt; fi
+
+    - name: Compilar ejecutables (Mac OS)
+      run: |
+        python build_clients.py
+
+    - name: Subir artefactos compilados
+      uses: actions/upload-artifact@v4
+      with:
+        name: Ejecutables-MacOS
+        path: |
+          dist/Servidor
+          dist/GUI_Concierto.app
+          dist/Generador_Carga.app
