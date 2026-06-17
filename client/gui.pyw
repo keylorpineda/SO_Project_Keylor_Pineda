@@ -447,7 +447,7 @@ class StadiumSelectorWidget(QFrame):
         super().__init__(parent)
         self.selected_zone = 0
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.setMinimumHeight(340)
+        self.setMinimumHeight(200)
         self.setStyleSheet(f"""
             .QFrame {{
                 background: {BG_PANEL};
@@ -465,31 +465,28 @@ class StadiumSelectorWidget(QFrame):
         self.subtitle.setStyleSheet(f"color: {TEXT_SEC}; font-size: 14px; letter-spacing: 0.2px;")
         layout.addWidget(self.subtitle)
 
+        stage_label = QLabel("ESCENARIO PRINCIPAL")
+        stage_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        stage_label.setStyleSheet(f"color: {TEXT_MUTED}; font-weight: 800; font-size: 13px; letter-spacing: 4px; background: {BG_DEEP}; border-radius: 6px; padding: 4px 10px;")
+        layout.addWidget(stage_label)
+
         arena = QFrame()
         arena.setStyleSheet("border: none; background: transparent;")
         arena_layout = QGridLayout(arena)
-        arena_layout.setContentsMargins(10, 8, 10, 8)
+        arena_layout.setContentsMargins(10, 6, 10, 6)
         arena_layout.setSpacing(10)
-        arena_layout.setRowMinimumHeight(1, 80)
-        arena_layout.setRowMinimumHeight(2, 0)
-        arena_layout.setRowMinimumHeight(3, 80)
-        arena_layout.setRowStretch(0, 0)
-        arena_layout.setRowStretch(1, 3)
-        arena_layout.setRowStretch(2, 3)
-        arena_layout.setRowStretch(3, 3)
-
-        stage_label = QLabel("ESCENARIO PRINCIPAL")
-        stage_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        stage_label.setStyleSheet(f"color: {TEXT_MUTED}; font-weight: 800; font-size: 16px; letter-spacing: 4px; background: {BG_DEEP}; border-radius: 12px; padding: 12px;")
-        arena_layout.addWidget(stage_label, 0, 1, 1, 2)
+        arena_layout.setRowMinimumHeight(0, 70)
+        arena_layout.setRowMinimumHeight(1, 70)
+        arena_layout.setRowStretch(0, 1)
+        arena_layout.setRowStretch(1, 1)
 
         self.zone_buttons = {}
         zone_specs = [
-            (0, "VIP\nFrente", 1, 1, 1, 2),
-            (1, "Pref Norte\nLateral", 1, 0, 2, 1),
-            (2, "Pref Sur\nLateral", 1, 3, 2, 1),
-            (3, "Gen Oeste\nPerimetral", 3, 0, 1, 2),
-            (4, "Gen Este\nPerimetral", 3, 2, 1, 2),
+            (1, "Pref Norte\nLateral",  0, 0, 1, 1),
+            (0, "VIP\nFrente",          0, 1, 1, 2),
+            (2, "Pref Sur\nLateral",    0, 3, 1, 1),
+            (3, "Gen Oeste\nPerimetral",1, 0, 1, 2),
+            (4, "Gen Este\nPerimetral", 1, 2, 1, 2),
         ]
 
         for zone_id, label, row, col, rowspan, colspan in zone_specs:
@@ -497,7 +494,7 @@ class StadiumSelectorWidget(QFrame):
             btn.setCursor(Qt.CursorShape.PointingHandCursor)
             btn.setCheckable(True)
             btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-            btn.setMinimumHeight(80)
+            btn.setMinimumHeight(70)
             btn.clicked.connect(lambda _, z=zone_id: self._select_zone(z))
             self.zone_buttons[zone_id] = btn
             
@@ -1085,6 +1082,7 @@ class ReserveTab(QWidget):
                 border-radius: 14px;
             }}
         """)
+        stadium_card.setMinimumHeight(310)
         stadium_layout = QVBoxLayout(stadium_card)
         stadium_layout.setContentsMargins(12, 12, 12, 12)
         stadium_layout.setSpacing(10)
@@ -1093,12 +1091,13 @@ class ReserveTab(QWidget):
         self.stadium_selector.zone_selected.connect(self._on_zone_selected)
         stadium_layout.addWidget(self.stadium_selector)
 
-        self.zone_hint = QLabel("Toca una zona para abrir su matriz")
-        self.zone_hint.setStyleSheet(f"color: {TEXT_SEC}; font-size: 14px;")
-        self.zone_hint.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        stadium_layout.addWidget(self.zone_hint)
-
         layout.addWidget(stadium_card, 1)
+
+        self.zone_hint = QLabel("Toca una zona para abrir su matriz")
+        self.zone_hint.setStyleSheet(f"color: {TEXT_SEC}; font-size: 13px;")
+        self.zone_hint.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.zone_hint.setFixedHeight(22)
+        layout.addWidget(self.zone_hint)
 
         self.flow_stack.addWidget(page)
 
@@ -2204,10 +2203,11 @@ class MainWindow(QMainWindow):
         root.addWidget(topbar)
 
         self.lbl_cart_strip = QLabel("")
-        self.lbl_cart_strip.setFixedHeight(22)
+        self.lbl_cart_strip.setFixedHeight(26)
+        self.lbl_cart_strip.setVisible(False)
         self.lbl_cart_strip.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
         self.lbl_cart_strip.setStyleSheet(
-            f"color: {TEXT_MUTED}; font-size: 11px; background: transparent; "
+            f"color: {TEXT_SEC}; font-size: 13px; font-weight: 600; background: transparent; "
             f"border: none; padding-right: 16px;"
         )
         root.addWidget(self.lbl_cart_strip)
@@ -2281,9 +2281,10 @@ class MainWindow(QMainWindow):
         self._ping_worker = worker
 
     def _on_summary_updated(self, text, color):
+        self.lbl_cart_strip.setVisible(bool(text))
         self.lbl_cart_strip.setText(text)
         self.lbl_cart_strip.setStyleSheet(
-            f"color: {color}; font-size: 11px; background: transparent; "
+            f"color: {color}; font-size: 13px; font-weight: 600; background: transparent; "
             f"border: none; padding-right: 16px;"
         )
 
