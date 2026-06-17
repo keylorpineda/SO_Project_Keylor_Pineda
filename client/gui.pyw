@@ -1,4 +1,4 @@
-import sys
+﻿import sys
 import os
 import threading
 import uuid
@@ -63,7 +63,7 @@ ZONE_NAMES  = {
     4: "General Este",
 }
 ZONE_PRICES = {
-    0: 85_000,    # VIP            ₢85 000
+    0: 85_000,    # VIP            ₡85 000
     1: 55_000,    # Preferencial Norte
     2: 55_000,    # Preferencial Sur
     3: 30_000,    # General Oeste
@@ -447,6 +447,7 @@ class StadiumSelectorWidget(QFrame):
         super().__init__(parent)
         self.selected_zone = 0
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.setMinimumHeight(340)
         self.setStyleSheet(f"""
             .QFrame {{
                 background: {BG_PANEL};
@@ -467,8 +468,15 @@ class StadiumSelectorWidget(QFrame):
         arena = QFrame()
         arena.setStyleSheet("border: none; background: transparent;")
         arena_layout = QGridLayout(arena)
-        arena_layout.setContentsMargins(10, 10, 10, 10)
-        arena_layout.setSpacing(16)
+        arena_layout.setContentsMargins(10, 8, 10, 8)
+        arena_layout.setSpacing(10)
+        arena_layout.setRowMinimumHeight(1, 80)
+        arena_layout.setRowMinimumHeight(2, 0)
+        arena_layout.setRowMinimumHeight(3, 80)
+        arena_layout.setRowStretch(0, 0)
+        arena_layout.setRowStretch(1, 3)
+        arena_layout.setRowStretch(2, 3)
+        arena_layout.setRowStretch(3, 3)
 
         stage_label = QLabel("ESCENARIO PRINCIPAL")
         stage_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -962,7 +970,8 @@ class StatCard(QFrame):
 
 # ── Tab: Mapa de asientos + reserva ────────────────────────────────────────
 class ReserveTab(QWidget):
-    log_signal = pyqtSignal(str)
+    log_signal       = pyqtSignal(str)
+    summary_updated  = pyqtSignal(str, str)   # (texto, color_hex)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -1013,6 +1022,18 @@ class ReserveTab(QWidget):
                 self.lbl_countdown.setStyleSheet(f"color: {RED}; font-size: 24px; font-weight: 800; text-align: center;")
             else:
                 self.lbl_countdown.setStyleSheet(f"color: {ACCENT2}; font-size: 24px; font-weight: 800; text-align: center;")
+            # Refrescar el strip del header con TTL actualizado
+            owned = self.seat_map.owned_seats
+            if owned:
+                total_p = sum(ZONE_PRICES.get(z, 0) for (z, r, c) in owned)
+                n_s = len(owned)
+                n_z = len(set(z for (z, r, c) in owned))
+                color = RED if self.countdown_seconds <= 10 else TEXT_SEC
+                parts = [f"₡ {total_p:,.0f}", f"{n_s} asiento{'s' if n_s != 1 else ''}"]
+                if n_z > 1:
+                    parts.append(f"{n_z} zonas")
+                parts.append(f"⏱ {self.countdown_seconds}s")
+                self.summary_updated.emit("  ·  ".join(parts), color)
             
             if self.countdown_seconds == 0:
                 self.lbl_countdown.setText("Tiempo expirado")
@@ -1342,7 +1363,7 @@ class ReserveTab(QWidget):
             zone_hdr_lay.setContentsMargins(8, 5, 8, 5)
             lbl_zname = QLabel(f"  {ZONE_NAMES.get(z_id, z_id)}")
             lbl_zname.setStyleSheet(f"color: {zone_color}; font-size: 12px; font-weight: 800; border: none;")
-            lbl_zprice = QLabel(f"₢ {price_unit:,.0f} c/u")
+            lbl_zprice = QLabel(f"₡ {price_unit:,.0f} c/u")
             lbl_zprice.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px; border: none;")
             zone_hdr_lay.addWidget(lbl_zname)
             zone_hdr_lay.addStretch()
@@ -1354,7 +1375,7 @@ class ReserveTab(QWidget):
                 seat_row.setContentsMargins(6, 1, 6, 1)
                 lbl_seat = QLabel(f"    Fila {r}  ·  Col {c}")
                 lbl_seat.setStyleSheet(f"color: {TEXT_SEC}; font-size: 12px; border: none;")
-                lbl_seat_price = QLabel(f"₢ {price_unit:,.0f}")
+                lbl_seat_price = QLabel(f"₡ {price_unit:,.0f}")
                 lbl_seat_price.setStyleSheet(f"color: {TEXT_PRI}; font-size: 12px; font-weight: 600; border: none;")
                 lbl_seat_price.setAlignment(Qt.AlignmentFlag.AlignRight)
                 seat_row.addWidget(lbl_seat)
@@ -1369,7 +1390,7 @@ class ReserveTab(QWidget):
             sub_row.setContentsMargins(6, 2, 6, 4)
             lbl_sub_l = QLabel(f"    {len(seats_here)} asiento(s)")
             lbl_sub_l.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px; border: none;")
-            lbl_sub_r = QLabel(f"₢ {subtotal:,.0f}")
+            lbl_sub_r = QLabel(f"₡ {subtotal:,.0f}")
             lbl_sub_r.setStyleSheet(f"color: {zone_color}; font-size: 12px; font-weight: 700; border: none;")
             lbl_sub_r.setAlignment(Qt.AlignmentFlag.AlignRight)
             sub_row.addWidget(lbl_sub_l)
@@ -1391,9 +1412,9 @@ class ReserveTab(QWidget):
             empty.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 13px; border: none; padding: 8px 0;")
             empty.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self._breakdown_layout.addWidget(empty)
-            self.lbl_total.setText("₢ 0")
+            self.lbl_total.setText("₡ 0")
         else:
-            self.lbl_total.setText(f"₢ {total_price:,.0f}")
+            self.lbl_total.setText(f"₡ {total_price:,.0f}")
 
         self._breakdown_layout.addStretch()
 
@@ -1402,6 +1423,19 @@ class ReserveTab(QWidget):
             self.tx_input.setText(tx_ids)
         else:
             self.tx_input.clear()
+
+        # Señal al strip del header
+        if owned_seats:
+            n_seats = len(owned_seats)
+            n_zones = len(set(z for (z, r, c) in owned_seats))
+            parts = [f"₡ {total_price:,.0f}", f"{n_seats} asiento{'s' if n_seats != 1 else ''}"]
+            if n_zones > 1:
+                parts.append(f"{n_zones} zonas")
+            if self.countdown_seconds > 0:
+                parts.append(f"⏱ {self.countdown_seconds}s")
+            self.summary_updated.emit("  ·  ".join(parts), TEXT_SEC)
+        else:
+            self.summary_updated.emit("", TEXT_MUTED)
 
         # Habilitar/deshabilitar botones de acción según si hay reservas
         has_reserved = bool(owned_seats)
@@ -2169,6 +2203,15 @@ class MainWindow(QMainWindow):
         topbar_layout.addWidget(self.status_dot)
         root.addWidget(topbar)
 
+        self.lbl_cart_strip = QLabel("")
+        self.lbl_cart_strip.setFixedHeight(22)
+        self.lbl_cart_strip.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        self.lbl_cart_strip.setStyleSheet(
+            f"color: {TEXT_MUTED}; font-size: 11px; background: transparent; "
+            f"border: none; padding-right: 16px;"
+        )
+        root.addWidget(self.lbl_cart_strip)
+
         tabs = QTabWidget()
         tabs.setDocumentMode(True)
 
@@ -2184,9 +2227,10 @@ class MainWindow(QMainWindow):
         self.tab_log = LogTab()
         self.tab_log.setMinimumHeight(180)
         self.tab_log.setMaximumHeight(260)
-        
+
         self.tab_reserve.log_signal.connect(self.tab_log.append_entry)
         self.tab_reserve.log_signal.connect(self.tab_log_full.append_entry)
+        self.tab_reserve.summary_updated.connect(self._on_summary_updated)
         main_splitter = QSplitter(Qt.Orientation.Vertical)
         main_splitter.addWidget(tabs)
         main_splitter.addWidget(self.tab_log)
@@ -2235,6 +2279,13 @@ class MainWindow(QMainWindow):
         ))
         worker.start()
         self._ping_worker = worker
+
+    def _on_summary_updated(self, text, color):
+        self.lbl_cart_strip.setText(text)
+        self.lbl_cart_strip.setStyleSheet(
+            f"color: {color}; font-size: 11px; background: transparent; "
+            f"border: none; padding-right: 16px;"
+        )
 
     def _do_logout(self):
         reply = QMessageBox.question(
