@@ -2182,8 +2182,8 @@ class MainWindow(QMainWindow):
         tabs.addTab(self.tab_log_full, "Bitácora Completa")
 
         self.tab_log = LogTab()
-        self.tab_log.setMinimumHeight(120)
-        self.tab_log.setMaximumHeight(160)
+        self.tab_log.setMinimumHeight(180)
+        self.tab_log.setMaximumHeight(260)
         
         self.tab_reserve.log_signal.connect(self.tab_log.append_entry)
         self.tab_reserve.log_signal.connect(self.tab_log_full.append_entry)

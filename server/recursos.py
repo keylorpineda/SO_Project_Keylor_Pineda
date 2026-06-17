@@ -5,7 +5,7 @@ import json
 import os
 
 ZONE_CONFIG = {
-    0: {"nombre": "VIP",                "rows": 2,  "cols": 10}, # 20 asientos
+    0: {"nombre": "VIP",                "rows": 5,  "cols": 10}, # 50 asientos
     1: {"nombre": "Preferencial Norte", "rows": 10, "cols": 12}, # 120 asientos
     2: {"nombre": "Preferencial Sur",   "rows": 10, "cols": 12}, # 120 asientos
     3: {"nombre": "General Oeste",      "rows": 15, "cols": 10}, # 150 asientos

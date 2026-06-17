@@ -37,7 +37,7 @@ ZONE_NAMES = {
 }
 
 ZONE_DIMS = {
-    0: (2, 10),
+    0: (5, 10),
     1: (10, 12),
     2: (10, 12),
     3: (15, 10),
@@ -107,6 +107,14 @@ class GeneratorApp(QMainWindow):
                 border-radius: 6px; padding: 5px 10px; font-size: 13px;
             }}
             QLineEdit:focus, QSpinBox:focus {{ border-color: {ACCENT}; }}
+            QSpinBox::up-button, QSpinBox::down-button {{
+                width: 24px; border: none; background: #2a2a3a;
+            }}
+            QSpinBox::up-button {{ border-left: 1px solid {BORDER}; border-bottom: 1px solid {BORDER}; border-radius: 0 6px 0 0; }}
+            QSpinBox::down-button {{ border-left: 1px solid {BORDER}; border-top: 1px solid {BORDER}; border-radius: 0 0 6px 0; }}
+            QSpinBox::up-button:hover, QSpinBox::down-button:hover {{ background: {ACCENT}; }}
+            QSpinBox::up-arrow {{ image: url(:/qt-project.org/styles/commonstyle/images/up-arrow.png); width: 10px; height: 10px; }}
+            QSpinBox::down-arrow {{ image: url(:/qt-project.org/styles/commonstyle/images/down-arrow.png); width: 10px; height: 10px; }}
             QCheckBox {{ color: {TEXT_PRI}; spacing: 8px; font-size: 13px; }}
             QCheckBox::indicator {{ width: 16px; height: 16px; border-radius: 4px;
                 border: 1.5px solid {BORDER}; background: #1e1e2e; }}
@@ -178,45 +186,28 @@ class GeneratorApp(QMainWindow):
         params_grid = QGridLayout(params_grp)
         params_grid.setSpacing(8)
 
-        params_grid.addWidget(QLabel("Tipo de prueba:"), 0, 0)
-        self.cmb_mode = QComboBox()
-        self.cmb_mode.addItems([
-            "Solo conflicto (mismo asiento)",
-            "Solo carga masiva (asientos aleatorios)",
-            "Ambas (conflicto + carga masiva)",
-        ])
-        self.cmb_mode.setCurrentIndex(2)
-        self.cmb_mode.currentIndexChanged.connect(self._update_params_visibility)
-        params_grid.addWidget(self.cmb_mode, 0, 1)
+        params_grid.addWidget(QLabel("Usuarios de carga:"), 0, 0)
+        self.spin_users = QSpinBox()
+        self.spin_users.setRange(10, 2000)
+        self.spin_users.setValue(300)
+        self.spin_users.setSingleStep(50)
+        params_grid.addWidget(self.spin_users, 0, 1)
 
-        params_grid.addWidget(QLabel("Usuarios en conflicto:"), 1, 0)
-        self.spin_conflict = QSpinBox()
-        self.spin_conflict.setRange(2, 500)
-        self.spin_conflict.setValue(50)
-        params_grid.addWidget(self.spin_conflict, 1, 1)
+        lbl_info = QLabel(
+            "Lanza N hilos simultáneos: ~20% compiten por el mismo asiento (conflicto) "
+            "y el resto apuntan a asientos aleatorios (carga). Ambos escenarios corren juntos."
+        )
+        lbl_info.setWordWrap(True)
+        lbl_info.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
+        params_grid.addWidget(lbl_info, 1, 0, 1, 2)
 
-        params_grid.addWidget(QLabel("Usuarios carga masiva:"), 2, 0)
-        self.spin_load = QSpinBox()
-        self.spin_load.setRange(5, 2000)
-        self.spin_load.setValue(100)
-        params_grid.addWidget(self.spin_load, 2, 1)
-
-        # Explicación de las categorías
-        lbl_info_conf = QLabel("Conflicto: Simula N usuarios intentando comprar el MISMO asiento al MISMO tiempo.")
-        lbl_info_conf.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
-        lbl_info_load = QLabel("Carga masiva: Simula N usuarios comprando asientos aleatorios para estresar el servidor.")
-        lbl_info_load.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
-        
-        params_grid.addWidget(lbl_info_conf, 3, 0, 1, 2)
-        params_grid.addWidget(lbl_info_load, 4, 0, 1, 2)
-
-        self.chk_confirm_random = QCheckBox("Confirmar/Cancelar aleatoriamente")
+        self.chk_confirm_random = QCheckBox("Confirmar/Cancelar aleatoriamente (70% confirma, 30% cancela)")
         self.chk_confirm_random.setChecked(True)
-        params_grid.addWidget(self.chk_confirm_random, 5, 0, 1, 2)
+        params_grid.addWidget(self.chk_confirm_random, 2, 0, 1, 2)
 
         self.chk_gen_pdf = QCheckBox("Generar PDF de evidencia")
         self.chk_gen_pdf.setChecked(True)
-        params_grid.addWidget(self.chk_gen_pdf, 6, 0, 1, 2)
+        params_grid.addWidget(self.chk_gen_pdf, 3, 0, 1, 2)
 
         cfg_row.addWidget(params_grp, 1)
         root.addLayout(cfg_row)
@@ -278,11 +269,6 @@ class GeneratorApp(QMainWindow):
         all_checked = all(chk.isChecked() for chk in self.zone_checks.values())
         self.chk_all_zones.setChecked(all_checked)
 
-    def _update_params_visibility(self, idx):
-        mode = self.cmb_mode.currentIndex()
-        self.spin_conflict.setEnabled(mode in (0, 2))
-        self.spin_load.setEnabled(mode in (1, 2))
-
     def _save_net(self):
         try:
             port = int(self.inp_port.text().strip())
@@ -318,19 +304,17 @@ class GeneratorApp(QMainWindow):
     def _run(self):
         if self._runner and self._runner.isRunning():
             return
-        zones      = self._get_target_zones()
-        mode       = self.cmb_mode.currentIndex()
-        n_conflict = self.spin_conflict.value() if mode in (0, 2) else 0
-        n_load     = self.spin_load.value()     if mode in (1, 2) else 0
+        zones       = self._get_target_zones()
+        n_users     = self.spin_users.value()
         confirm_rnd = self.chk_confirm_random.isChecked()
-        gen_pdf    = self.chk_gen_pdf.isChecked()
+        gen_pdf     = self.chk_gen_pdf.isChecked()
 
         self.console_output.clear()
         self.btn_run.setEnabled(False)
         self.btn_stop.setEnabled(True)
 
         self._runner = _TestRunner(
-            lambda: self._test_fn(zones, mode, n_conflict, n_load, confirm_rnd, gen_pdf),
+            lambda: self._test_fn(zones, n_users, confirm_rnd, gen_pdf),
             self
         )
         self._runner.line_ready.connect(self._log)
@@ -356,8 +340,8 @@ class GeneratorApp(QMainWindow):
         self._log("\n" + msg + "\n")
 
     # ── Lógica de prueba ─────────────────────────────────────────────────────
-    def _test_fn(self, zones, mode, n_conflict, n_load, confirm_rnd, gen_pdf):
-        import threading, random
+    def _test_fn(self, zones, n_users, confirm_rnd, gen_pdf):
+        import threading, random, uuid
         from client.cliente_lib import reserve, confirm, cancel, global_state
         try:
             from fpdf import FPDF
@@ -369,36 +353,38 @@ class GeneratorApp(QMainWindow):
         results      = []
         stats        = {"ok": 0, "rechazados": 0, "confirmados": 0, "cancelados": 0, "errores": 0}
 
-        def log(msg, color=""):
+        def log(msg):
             ts = time.strftime("%H:%M:%S") + f".{int(time.time()*1000)%1000:03d}"
             entry = f"[{ts}] {msg}"
             with results_lock:
                 results.append(entry)
             print(entry)
 
-        def simulated_user(uid, zone_id, row, col, do_confirm_rnd):
+        def simulated_user(uid, zone_id, row, col):
+            sid = str(uuid.uuid4())
             try:
-                resp = reserve(zone_id, row, col)
+                resp = reserve(zone_id, row, col, session_id=sid)
                 if resp["ok"]:
                     tx_id = resp["tx_id"]
                     log(f"[OK] {uid} reservó Z{zone_id} F{row}C{col} → TX:{tx_id}")
-                    with results_lock:
-                        stats["ok"] += 1
-                    if do_confirm_rnd:
-                        action = random.choices(["confirm", "cancel"], weights=[70, 30])[0]
-                    else:
-                        action = "confirm"
+                    with results_lock: stats["ok"] += 1
+                    action = random.choices(["confirm", "cancel"], weights=[70, 30])[0] if confirm_rnd else "confirm"
                     if action == "confirm":
-                        r2 = confirm(tx_id)
+                        r2 = confirm(tx_id, session_id=sid)
                         if r2["ok"]:
                             log(f"[✓] {uid} CONFIRMÓ TX:{tx_id}")
                             with results_lock: stats["confirmados"] += 1
                         else:
-                            log(f"[!] {uid} fallo confirmar TX:{tx_id}: {r2['error']}")
+                            log(f"[!] {uid} falló confirmar TX:{tx_id}: {r2['error']}")
+                            with results_lock: stats["errores"] += 1
                     else:
-                        cancel(tx_id)
-                        log(f"[x] {uid} canceló TX:{tx_id}")
-                        with results_lock: stats["cancelados"] += 1
+                        r2 = cancel(tx_id, session_id=sid)
+                        if r2["ok"]:
+                            log(f"[x] {uid} canceló TX:{tx_id}")
+                            with results_lock: stats["cancelados"] += 1
+                        else:
+                            log(f"[!] {uid} falló cancelar TX:{tx_id}: {r2['error']}")
+                            with results_lock: stats["errores"] += 1
                 else:
                     log(f"[✗] {uid} RECHAZADO Z{zone_id} F{row}C{col}: {resp['error']}")
                     with results_lock: stats["rechazados"] += 1
@@ -406,54 +392,43 @@ class GeneratorApp(QMainWindow):
                 log(f"[ERR] {uid} error de red: {e}")
                 with results_lock: stats["errores"] += 1
 
-        def run_scenario(label, threads):
-            print(f"\n{'='*60}")
-            print(f"  {label}")
-            print(f"{'='*60}")
-            start = time.time()
-            for t in threads: t.start()
-            for t in threads: t.join()
-            elapsed = time.time() - start
-            print(f"  Completado en {elapsed:.2f}s con {len(threads)} hilos")
+        # Construir todos los hilos: 20% conflicto (mismo asiento por zona), 80% aleatorio
+        all_threads = []
+        conflict_per_zone = max(5, n_users // (5 * len(zones)))
+        load_count = n_users - conflict_per_zone * len(zones)
 
-        # Escenario 1: Conflicto (muchos usuarios compitiendo por el mismo asiento)
-        if mode in (0, 2) and n_conflict > 0:
-            for zone_id in zones:
-                rows, cols = ZONE_DIMS[zone_id]
-                row_target = rows // 2
-                col_target = cols // 2
-                threads = [
-                    threading.Thread(
-                        target=simulated_user,
-                        args=(f"C{i:03d}", zone_id, row_target, col_target, confirm_rnd),
-                        daemon=True,
-                    )
-                    for i in range(n_conflict)
-                ]
-                run_scenario(
-                    f"CONFLICTO | Zona {ZONE_NAMES[zone_id]} | {n_conflict} usuarios → F{row_target}C{col_target}",
-                    threads,
-                )
-                time.sleep(1)
+        for zone_id in zones:
+            rows, cols = ZONE_DIMS[zone_id]
+            rt, ct = rows // 2, cols // 2
+            for i in range(conflict_per_zone):
+                all_threads.append(threading.Thread(
+                    target=simulated_user,
+                    args=(f"C{zone_id}-{i:03d}", zone_id, rt, ct),
+                    daemon=True,
+                ))
 
-        # Escenario 2: Carga masiva (asientos aleatorios en zonas seleccionadas)
-        if mode in (1, 2) and n_load > 0:
-            load_threads = []
-            for i in range(n_load):
-                zone_id = random.choice(zones)
-                rows, cols = ZONE_DIMS[zone_id]
-                r = random.randint(0, rows - 1)
-                c = random.randint(0, cols - 1)
-                load_threads.append(
-                    threading.Thread(
-                        target=simulated_user,
-                        args=(f"R{i:03d}", zone_id, r, c, confirm_rnd),
-                        daemon=True,
-                    )
-                )
-            zones_str = ", ".join(ZONE_NAMES[z] for z in zones)
-            run_scenario(f"CARGA MASIVA | {n_load} usuarios | Zonas: {zones_str}", load_threads)
-            time.sleep(1)
+        for i in range(max(0, load_count)):
+            zone_id = random.choice(zones)
+            rows, cols = ZONE_DIMS[zone_id]
+            all_threads.append(threading.Thread(
+                target=simulated_user,
+                args=(f"R{i:03d}", zone_id, random.randint(0, rows-1), random.randint(0, cols-1)),
+                daemon=True,
+            ))
+
+        print(f"\n{'='*60}")
+        print(f"  PRUEBA DE CARGA CONCURRENTE")
+        print(f"  Total de hilos: {len(all_threads)}")
+        print(f"  Conflicto: {conflict_per_zone * len(zones)} usuarios ({conflict_per_zone} por zona)")
+        print(f"  Aleatorio:  {max(0, load_count)} usuarios en asientos distribuidos")
+        print(f"  Zonas: {', '.join(ZONE_NAMES[z] for z in zones)}")
+        print(f"{'='*60}")
+
+        start = time.time()
+        for t in all_threads: t.start()
+        for t in all_threads: t.join()
+        elapsed = time.time() - start
+        print(f"\n  Completado en {elapsed:.2f}s con {len(all_threads)} hilos simultáneos")
 
         # Reporte de integridad
         print(f"\n{'='*60}")
