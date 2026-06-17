@@ -645,7 +645,7 @@ class SeatMapPanel(QWidget):
         self.poll_timer.stop()
         if auto_load:
             self.load_zone(full_rebuild=True)
-            self.poll_timer.start(300)
+            self.poll_timer.start(100)
 
     def _clear_grid(self):
         while self.grid_layout.count():
@@ -660,20 +660,39 @@ class SeatMapPanel(QWidget):
         self.load_zone(full_rebuild=False)
 
     def load_zone(self, full_rebuild=True):
-        self._full_rebuild = full_rebuild
         self._poll_running = True
-        worker = NetworkWorker(check, self.zone_id)
-        worker.result.connect(self._on_loaded)
+        worker = NetworkWorker(check, self.zone_id, SESSION_ID)
+        worker.result.connect(lambda resp, fb=full_rebuild: self._on_loaded(resp, fb))
         worker.error.connect(self._on_load_error)
         worker.start()
 
-    def _on_loaded(self, resp):
+    def _on_loaded(self, resp, is_full_rebuild=True):
         self._poll_running = False
         if not resp["ok"]:
             return
         matrix = resp["state"]
+
+        # Sincronizar owned_seats desde servidor SOLO en rebuild completo (cambio de zona)
+        # En polls periódicos (cada 300ms), jamás limpiar para no destruir reservas recién hechas
+        if is_full_rebuild and "my_reservations" in resp:
+            self.owned_seats.clear()
+            for tx, seats in resp["my_reservations"].items():
+                for item in seats:
+                    z, r, c = item[0], item[1], item[2]
+                    self.owned_seats[(z, r, c)] = tx
+
+        # Sincronizar holds (asientos SELECTED míos) — sobreviven a reinicios y re-login
+        # Se agregan a owned_seats con tx="HOLD" y a local_cart para que aparezcan naranja (míos)
+        if is_full_rebuild and "my_holds" in resp:
+            for item in resp["my_holds"]:
+                z, r, c = item[0], item[1], item[2]
+                key = (z, r, c)
+                if key not in self.owned_seats:
+                    self.owned_seats[key] = "HOLD"
+                if key not in self.local_cart:
+                    self.local_cart.add(key)
         
-        if not getattr(self, '_full_rebuild', True):
+        if not is_full_rebuild:
             if matrix:
                 self.update_matrix(matrix)
             return
@@ -714,6 +733,7 @@ class SeatMapPanel(QWidget):
 
         self._update_selection_label()
 
+
     def _on_load_error(self, msg):
         self._poll_running = False
 
@@ -727,7 +747,19 @@ class SeatMapPanel(QWidget):
         # Si ya lo tenemos reservado formalmente, permitimos cancelar (deseleccionar)
         if key in self.owned_seats:
             tx_id = self.owned_seats[key]
-            self.seat_cancel_request.emit(tx_id, key)
+            if tx_id == "HOLD":
+                # Era un hold recuperado de sesión anterior — lo deseleccionamos
+                self.owned_seats.pop(key, None)
+                self.local_cart.discard(key)
+                btn.selected = False
+                btn._apply_style()
+                self._update_selection_label()
+                self.selection_changed.emit((self.local_cart, self.owned_seats))
+                worker = NetworkWorker(deselect_seat, self.zone_id, r, c, SESSION_ID)
+                worker.error.connect(lambda e: self.seat_select_error.emit(e))
+                worker.start()
+            else:
+                self.seat_cancel_request.emit(tx_id, key)
             return
 
         if key in self.local_cart:
@@ -794,8 +826,7 @@ class SeatMapPanel(QWidget):
             tx_id = resp["tx_id"]
             self.local_cart.discard(key)
             self.owned_seats[key] = tx_id
-            # Cambiar apariencia a 'reservado' (naranja)
-            btn.selected = False
+            btn.selected = True  # mantener naranja — el asiento es nuestro
             btn.seat_state = "R"
             btn._apply_style()
             self._update_selection_label()
@@ -840,6 +871,16 @@ class SeatMapPanel(QWidget):
 
     def _cancel_seat_async(self, tx_id):
         pass  # Handled by ReserveTab now
+
+    def reset(self):
+        """Detiene timers y limpia estado local para el logout sin reiniciar el proceso."""
+        self.poll_timer.stop()
+        self._poll_running = False
+        self.owned_seats.clear()
+        self.local_cart.clear()
+        self.seat_buttons.clear()
+        self._clear_grid()
+        self._update_selection_label()
 
     def _update_selection_label(self):
         if not self.local_cart and not self.owned_seats:
@@ -955,8 +996,9 @@ class ReserveTab(QWidget):
 
     def _on_ttl_synced(self, resp):
         """Recibe el TTL del servidor y actualiza el countdown si hay tiempo restante."""
+        import math
         if resp.get("ok"):
-            remaining = int(resp.get("remaining", 0))
+            remaining = math.ceil(float(resp.get("remaining", 0)))
             if remaining > 0 and self.countdown_seconds == 0:
                 self.countdown_seconds = remaining
                 self._log(f"Sesión retomada — {remaining}s restantes")
@@ -1066,14 +1108,6 @@ class ReserveTab(QWidget):
         left = QWidget()
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
-
-        title = QLabel("Paso 2: Selecciona tus asientos")
-        title.setObjectName("heading")
-        sub = QLabel("Haz clic en asientos disponibles y completa la compra desde el panel derecho")
-        sub.setObjectName("subheading")
-        left_layout.addWidget(title)
-        left_layout.addWidget(sub)
-        left_layout.addSpacing(8)
 
         self.seat_map = SeatMapPanel()
         self.seat_map.set_zone(self.selected_zone, auto_load=False)
@@ -1186,16 +1220,23 @@ class ReserveTab(QWidget):
         self.tx_input.setPlaceholderText("Ej: A1B2C3D4")
         self.tx_input.setMinimumHeight(38)
 
+        _btn_disabled_style = f"""
+            QPushButton {{ background: #27272a; color: #52525b; border: 1px solid #3f3f46;
+                           border-radius: 6px; font-size: 14px; font-weight: 800; }}
+            QPushButton:hover {{ background: #27272a; color: #52525b; }}
+        """
         self.btn_confirm = QPushButton("Confirmar compra")
-        self.btn_confirm.setObjectName("success")
         self.btn_confirm.setMinimumHeight(40)
         self.btn_confirm.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.btn_confirm.setEnabled(False)
+        self.btn_confirm.setStyleSheet(_btn_disabled_style)
         self.btn_confirm.clicked.connect(self._do_confirm)
 
         self.btn_cancel = QPushButton("Cancelar reserva")
-        self.btn_cancel.setObjectName("danger")
         self.btn_cancel.setMinimumHeight(40)
         self.btn_cancel.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.btn_cancel.setEnabled(False)
+        self.btn_cancel.setStyleSheet(_btn_disabled_style)
         self.btn_cancel.clicked.connect(self._do_cancel)
 
         grp_tx_layout.addWidget(tx_note)
@@ -1362,11 +1403,36 @@ class ReserveTab(QWidget):
         else:
             self.tx_input.clear()
 
+        # Habilitar/deshabilitar botones de acción según si hay reservas
+        has_reserved = bool(owned_seats)
+        self.btn_confirm.setEnabled(has_reserved)
+        self.btn_cancel.setEnabled(has_reserved)
+        if has_reserved:
+            self.btn_confirm.setStyleSheet(f"""
+                QPushButton {{ background: {GREEN}; color: #000000; border: none; border-radius: 6px; font-size: 14px; font-weight: 800; }}
+                QPushButton:hover {{ background: #34d399; }}
+                QPushButton:pressed {{ background: #059669; }}
+            """)
+            self.btn_cancel.setStyleSheet(f"""
+                QPushButton {{ background: {RED}; color: #ffffff; border: none; border-radius: 6px; font-size: 14px; font-weight: 800; }}
+                QPushButton:hover {{ background: #f87171; }}
+                QPushButton:pressed {{ background: #dc2626; }}
+            """)
+        else:
+            disabled_style = f"""
+                QPushButton {{ background: #27272a; color: #52525b; border: 1px solid #3f3f46;
+                               border-radius: 6px; font-size: 14px; font-weight: 800; }}
+                QPushButton:hover {{ background: #27272a; color: #52525b; }}
+            """
+            self.btn_confirm.setStyleSheet(disabled_style)
+            self.btn_cancel.setStyleSheet(disabled_style)
+
     def _apply_server_ttl(self, resp):
         """Aplica el TTL recibido del servidor al countdown local.
         Siempre refleja el tiempo REAL que queda en el servidor."""
+        import math
         if resp.get("ok"):
-            remaining = int(resp.get("remaining", 60))
+            remaining = math.ceil(float(resp.get("remaining", 60)))
             # Mínimo 1s para evitar flash de 'expirado' inmediato
             self.countdown_seconds = max(remaining, 1)
 
@@ -1511,6 +1577,16 @@ class ReserveTab(QWidget):
         import time
         ts = time.strftime("%H:%M:%S")
         self.log_signal.emit(f"[{ts}] {msg}")
+
+    def reset(self):
+        """Detiene timers y limpia estado para logout sin reiniciar el proceso."""
+        self.timer.stop()
+        self.countdown_seconds = 0
+        self.lbl_countdown.setText("")
+        self.seat_map.reset()
+        self.tx_input.clear()
+        self._refresh_selection_panel()
+        self.timer.start(1000)
 
 
 # ── Tab: Estado global ──────────────────────────────────────────────────────
@@ -1762,17 +1838,17 @@ class MainWindow(QMainWindow):
         outer.setAlignment(Qt.AlignmentFlag.AlignCenter)
         outer.setContentsMargins(20, 20, 20, 20)
 
-        card = QFrame()
-        card.setFixedWidth(440)
-        card.setStyleSheet(f"""
+        self.auth_card = QFrame()
+        self.auth_card.setFixedWidth(420)
+        self.auth_card.setStyleSheet(f"""
             .QFrame {{
                 background: {BG_CARD};
                 border: 1px solid {BORDER};
                 border-radius: 20px;
             }}
         """)
-        cl = QVBoxLayout(card)
-        cl.setContentsMargins(36, 32, 36, 28)
+        cl = QVBoxLayout(self.auth_card)
+        cl.setContentsMargins(36, 32, 36, 32)
         cl.setSpacing(0)
 
         icon_lbl = QLabel("🎫")
@@ -1797,8 +1873,8 @@ class MainWindow(QMainWindow):
         cl.addWidget(sub)
         cl.addSpacing(24)
 
-        lbl_login_usr = QLabel("USUARIO")
-        lbl_login_usr.setStyleSheet(
+        lbl_usr = QLabel("USUARIO")
+        lbl_usr.setStyleSheet(
             f"color: {TEXT_MUTED}; font-size: 11px; font-weight: 700; "
             "background: transparent; border: none; letter-spacing: 1px;"
         )
@@ -1806,8 +1882,8 @@ class MainWindow(QMainWindow):
         self.inp_login_usr.setPlaceholderText("Ingresa tu usuario")
         self._style_auth_input(self.inp_login_usr)
 
-        lbl_login_pwd = QLabel("CONTRASEÑA")
-        lbl_login_pwd.setStyleSheet(
+        lbl_pwd = QLabel("CONTRASEÑA")
+        lbl_pwd.setStyleSheet(
             f"color: {TEXT_MUTED}; font-size: 11px; font-weight: 700; "
             "background: transparent; border: none; letter-spacing: 1px;"
         )
@@ -1816,127 +1892,60 @@ class MainWindow(QMainWindow):
         self.inp_login_pwd.setPlaceholderText("••••••••")
         self._style_auth_input(self.inp_login_pwd)
 
+        cl.addWidget(lbl_usr)
+        cl.addSpacing(4)
+        cl.addWidget(self.inp_login_usr)
+        cl.addSpacing(12)
+        cl.addWidget(lbl_pwd)
+        cl.addSpacing(4)
+        cl.addWidget(self.inp_login_pwd)
+        cl.addSpacing(18)
+
+        # Botón Iniciar Sesión
         self.btn_login = QPushButton("Iniciar Sesión")
         self._style_auth_btn(self.btn_login)
         self.btn_login.clicked.connect(self._do_login)
         self.inp_login_pwd.returnPressed.connect(self._do_login)
-
-        cl.addWidget(lbl_login_usr)
-        cl.addSpacing(4)
-        cl.addWidget(self.inp_login_usr)
-        cl.addSpacing(12)
-        cl.addWidget(lbl_login_pwd)
-        cl.addSpacing(4)
-        cl.addWidget(self.inp_login_pwd)
-        cl.addSpacing(16)
         cl.addWidget(self.btn_login)
+        cl.addSpacing(8)
 
-        cl.addSpacing(20)
-        div_row = QHBoxLayout()
-        div_left = QFrame()
-        div_left.setFrameShape(QFrame.Shape.HLine)
-        div_left.setStyleSheet(f"border: none; border-top: 1px solid {BORDER};")
-        div_right = QFrame()
-        div_right.setFrameShape(QFrame.Shape.HLine)
-        div_right.setStyleSheet(f"border: none; border-top: 1px solid {BORDER};")
-        div_lbl = QLabel("¿No tienes cuenta?")
-        div_lbl.setStyleSheet(
-            f"color: {TEXT_MUTED}; font-size: 12px; background: transparent; border: none; padding: 0 8px;"
-        )
-        div_row.addWidget(div_left, 1)
-        div_row.addWidget(div_lbl)
-        div_row.addWidget(div_right, 1)
-        cl.addLayout(div_row)
-        cl.addSpacing(10)
-
-        self.btn_toggle_reg = QPushButton("Crear una cuenta  →")
-        self.btn_toggle_reg.setStyleSheet(f"""
-            QPushButton {{
-                background: transparent; color: {ACCENT2}; border: none;
-                font-size: 13px; font-weight: 700; padding: 6px;
-            }}
-            QPushButton:hover {{ color: #93c5fd; }}
-        """)
-        self.btn_toggle_reg.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.btn_toggle_reg.clicked.connect(self._toggle_register_panel)
-        cl.addWidget(self.btn_toggle_reg, alignment=Qt.AlignmentFlag.AlignCenter)
-
-        self._reg_panel = QFrame()
-        self._reg_panel.setVisible(False)
-        self._reg_panel.setStyleSheet(f"""
-            .QFrame {{
-                background: {BG_PANEL};
-                border-radius: 12px;
-                border: 1px solid {BORDER};
-            }}
-        """)
-        reg_inner = QVBoxLayout(self._reg_panel)
-        reg_inner.setContentsMargins(16, 14, 16, 14)
-        reg_inner.setSpacing(8)
-
-        lbl_reg_usr = QLabel("NUEVO USUARIO")
-        lbl_reg_usr.setStyleSheet(
-            f"color: {TEXT_MUTED}; font-size: 11px; font-weight: 700; "
-            "background: transparent; border: none; letter-spacing: 1px;"
-        )
-        self.inp_reg_usr = QLineEdit()
-        self.inp_reg_usr.setPlaceholderText("mín. 3 caracteres")
-        self._style_auth_input(self.inp_reg_usr)
-
-        lbl_reg_pwd = QLabel("CONTRASEÑA NUEVA")
-        lbl_reg_pwd.setStyleSheet(
-            f"color: {TEXT_MUTED}; font-size: 11px; font-weight: 700; "
-            "background: transparent; border: none; letter-spacing: 1px;"
-        )
-        self.inp_reg_pwd = QLineEdit()
-        self.inp_reg_pwd.setEchoMode(QLineEdit.EchoMode.Password)
-        self.inp_reg_pwd.setPlaceholderText("mín. 4 caracteres")
-        self._style_auth_input(self.inp_reg_pwd)
-
-        self.btn_register = QPushButton("Crear Cuenta")
+        # Botón Registrarse (mismo formulario)
+        self.btn_register = QPushButton("Crear Cuenta Nueva")
         self.btn_register.setMinimumHeight(44)
+        self.btn_register.setCursor(Qt.CursorShape.PointingHandCursor)
         self.btn_register.setStyleSheet(f"""
             QPushButton {{
-                background: qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #7c3aed,stop:1 #6d28d9);
-                color: white; border: none; border-radius: 10px;
-                font-size: 14px; font-weight: 800;
+                background: transparent;
+                color: {ACCENT2};
+                border: 1.5px solid {ACCENT2};
+                border-radius: 10px;
+                font-size: 14px; font-weight: 700;
             }}
-            QPushButton:hover {{ background: qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #a78bfa,stop:1 #7c3aed); }}
-            QPushButton:pressed {{ background: #5b21b6; }}
-            QPushButton:disabled {{ background: #27272a; color: #64748b; }}
+            QPushButton:hover {{ background: {ACCENT2}22; color: #93c5fd; border-color: #93c5fd; }}
+            QPushButton:pressed {{ background: {ACCENT}33; }}
+            QPushButton:disabled {{ border-color: {BORDER}; color: {TEXT_MUTED}; background: transparent; }}
         """)
         self.btn_register.clicked.connect(self._do_register)
-        self.inp_reg_pwd.returnPressed.connect(self._do_register)
+        cl.addWidget(self.btn_register)
+        cl.addSpacing(16)
 
-        reg_inner.addWidget(lbl_reg_usr)
-        reg_inner.addWidget(self.inp_reg_usr)
-        reg_inner.addWidget(lbl_reg_pwd)
-        reg_inner.addWidget(self.inp_reg_pwd)
-        reg_inner.addSpacing(4)
-        reg_inner.addWidget(self.btn_register)
-        cl.addWidget(self._reg_panel)
+        # Separador y configuración de red SIEMPRE VISIBLE (no colapsable)
+        net_sep = QFrame()
+        net_sep.setFrameShape(QFrame.Shape.HLine)
+        net_sep.setStyleSheet(f"border: none; border-top: 1px solid {BORDER};")
+        cl.addWidget(net_sep)
+        cl.addSpacing(10)
 
-        cl.addSpacing(8)
-        self.btn_toggle_net = QPushButton("⚙  Configurar servidor")
-        self.btn_toggle_net.setStyleSheet(f"""
-            QPushButton {{
-                background: transparent; color: {TEXT_MUTED}; border: none;
-                font-size: 11px; font-weight: 600; padding: 4px;
-            }}
-            QPushButton:hover {{ color: {TEXT_SEC}; }}
-        """)
-        self.btn_toggle_net.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.btn_toggle_net.clicked.connect(self._toggle_net_panel)
-        cl.addWidget(self.btn_toggle_net, alignment=Qt.AlignmentFlag.AlignCenter)
-
-        self._net_panel = QFrame()
-        self._net_panel.setVisible(False)
-        self._net_panel.setStyleSheet(
-            f".QFrame {{ background: {BG_PANEL}; border-radius: 10px; border: 1px solid {BORDER}; }}"
+        lbl_net = QLabel("⚙  Servidor")
+        lbl_net.setStyleSheet(
+            f"color: {TEXT_MUTED}; font-size: 11px; font-weight: 600; "
+            "background: transparent; border: none;"
         )
-        net_inner = QHBoxLayout(self._net_panel)
-        net_inner.setContentsMargins(12, 10, 12, 10)
-        net_inner.setSpacing(8)
+        cl.addWidget(lbl_net)
+        cl.addSpacing(6)
+
+        net_row = QHBoxLayout()
+        net_row.setSpacing(8)
         self.inp_net_ip = QLineEdit("127.0.0.1")
         self.inp_net_ip.setPlaceholderText("IP del servidor")
         self._style_auth_input(self.inp_net_ip)
@@ -1952,35 +1961,36 @@ class MainWindow(QMainWindow):
             QPushButton:hover {{ background: {ACCENT}; border-color: {ACCENT}; color: white; }}
         """)
         self.btn_net.clicked.connect(self._do_save_net)
-        net_inner.addWidget(self.inp_net_ip, 1)
-        net_inner.addWidget(self.inp_net_port)
-        net_inner.addWidget(self.btn_net)
-        cl.addWidget(self._net_panel)
-
+        net_row.addWidget(self.inp_net_ip, 1)
+        net_row.addWidget(self.inp_net_port)
+        net_row.addWidget(self.btn_net)
+        cl.addLayout(net_row)
         cl.addSpacing(12)
+
         self.lbl_auth_err = QLabel("")
         self.lbl_auth_err.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lbl_auth_err.setStyleSheet(
             f"color: {RED}; font-size: 12px; background: transparent; min-height: 16px; border: none;"
         )
         self.lbl_auth_err.setWordWrap(True)
+        self._auth_msg_color = RED
         cl.addWidget(self.lbl_auth_err)
 
         nota = QLabel(f"Sesión: {SESSION_ID[:8].upper()}")
         nota.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        nota.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 10px; background: transparent; border: none;")
+        nota.setStyleSheet(
+            f"color: {TEXT_MUTED}; font-size: 10px; background: transparent; border: none;"
+        )
         cl.addWidget(nota)
 
-        outer.addWidget(card)
+        outer.addWidget(self.auth_card)
         return page
 
     def _toggle_register_panel(self):
-        visible = self._reg_panel.isVisible()
-        self._reg_panel.setVisible(not visible)
-        self.btn_toggle_reg.setText("✕ Cancelar" if not visible else "Crear una cuenta  →")
+        pass  # eliminado - ya no se usa
 
     def _toggle_net_panel(self):
-        self._net_panel.setVisible(not self._net_panel.isVisible())
+        pass  # eliminado - ya no se usa
 
     def _style_auth_input(self, inp):
         inp.setMinimumHeight(42)
@@ -2015,14 +2025,14 @@ class MainWindow(QMainWindow):
         self.btn_login.setText("Validando...")
         self.lbl_auth_err.setText("")
         
-        worker = NetworkWorker(login, usr, pwd)
+        worker = NetworkWorker(login, usr, pwd, SESSION_ID)
         worker.result.connect(lambda resp: self._on_auth_result(resp, "login"))
         worker.error.connect(lambda err: self._on_auth_network_error(err, "login"))
         worker.start()
 
     def _do_register(self):
-        usr = self.inp_reg_usr.text().strip()
-        pwd = self.inp_reg_pwd.text().strip()
+        usr = self.inp_login_usr.text().strip()
+        pwd = self.inp_login_pwd.text().strip()
         if not usr or not pwd:
             self._show_auth_err("Completa todos los campos.")
             return
@@ -2037,7 +2047,7 @@ class MainWindow(QMainWindow):
         self.btn_register.setText("Registrando...")
         self.lbl_auth_err.setText("")
         
-        worker = NetworkWorker(register, usr, pwd)
+        worker = NetworkWorker(register, usr, pwd, SESSION_ID)
         worker.result.connect(lambda resp: self._on_auth_result(resp, "register"))
         worker.error.connect(lambda err: self._on_auth_network_error(err, "register"))
         worker.start()
@@ -2051,7 +2061,7 @@ class MainWindow(QMainWindow):
         try:
             port_i = int(port)
             set_server_address(ip, port_i)
-            self._show_auth_err(f"Configuración guardada ({ip}:{port_i})")
+            self._show_auth_ok(f"✓ Configuración guardada ({ip}:{port_i})")
             # Actualizar status bar si ya está en la pantalla principal
             if hasattr(self, '_statusbar'):
                 self._statusbar.showMessage(
@@ -2070,7 +2080,7 @@ class MainWindow(QMainWindow):
                 self.btn_login.setText("Ingreso Exitoso!")
             else:
                 self.btn_register.setText("Cuenta Creada!")
-            QTimer.singleShot(300, lambda: self._stack.setCurrentIndex(1))
+            QTimer.singleShot(300, lambda: self._enter_main_page())
         else:
             self._show_auth_err(f"Error: {resp.get('error', 'Error desconocido')}")
             if auth_type == "login":
@@ -2090,10 +2100,16 @@ class MainWindow(QMainWindow):
             self.btn_register.setText("Crear Cuenta")
 
     def _show_auth_err(self, msg):
+        self.lbl_auth_err.setStyleSheet(
+            f"color: {RED}; font-size: 12px; background: transparent; min-height: 16px; border: none;"
+        )
         self.lbl_auth_err.setText(msg)
-        orig = self.auth_tabs.pos()
-        for i, dx in enumerate([5, -5, 3, -3, 0]):
-            QTimer.singleShot(i * 40, lambda d=dx, o=orig: self.auth_tabs.move(o.x() + d, o.y()))
+
+    def _show_auth_ok(self, msg):
+        self.lbl_auth_err.setStyleSheet(
+            f"color: {GREEN}; font-size: 12px; background: transparent; min-height: 16px; border: none;"
+        )
+        self.lbl_auth_err.setText(msg)
 
 
     # ── Página 1: UI principal ───────────────────────────────────────────────
@@ -2140,9 +2156,15 @@ class MainWindow(QMainWindow):
         user_badge_layout.addWidget(self._user_lbl)
         user_badge_layout.addWidget(session_lbl)
 
+        self.btn_logout = QPushButton("Cerrar Sesión")
+        self.btn_logout.setObjectName("secondary")
+        self.btn_logout.setStyleSheet(f"color: {RED}; font-size: 13px; font-weight: 700; padding: 4px 12px; height: 26px;")
+        self.btn_logout.clicked.connect(self._do_logout)
+
         topbar_layout.addWidget(logo)
         topbar_layout.addStretch()
         topbar_layout.addWidget(user_badge)
+        topbar_layout.addWidget(self.btn_logout)
         topbar_layout.addSpacing(16)
         topbar_layout.addWidget(self.status_dot)
         root.addWidget(topbar)
@@ -2156,11 +2178,15 @@ class MainWindow(QMainWindow):
         tabs.addTab(self.tab_reserve, "Reservas")
         tabs.addTab(self.tab_status,  "Estado Global")
 
-        self.tab_log = LogTab()
-        self.tab_log.setMinimumHeight(180)
-        self.tab_log.setMaximumHeight(220)
-        self.tab_reserve.log_signal.connect(self.tab_log.append_entry)
+        self.tab_log_full = LogTab()
+        tabs.addTab(self.tab_log_full, "Bitácora Completa")
 
+        self.tab_log = LogTab()
+        self.tab_log.setMinimumHeight(120)
+        self.tab_log.setMaximumHeight(160)
+        
+        self.tab_reserve.log_signal.connect(self.tab_log.append_entry)
+        self.tab_reserve.log_signal.connect(self.tab_log_full.append_entry)
         main_splitter = QSplitter(Qt.Orientation.Vertical)
         main_splitter.addWidget(tabs)
         main_splitter.addWidget(self.tab_log)
@@ -2195,7 +2221,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self._stack)
 
     def _ping(self):
-        worker = NetworkWorker(global_state)
+        worker = NetworkWorker(global_state, SESSION_ID)
         worker.result.connect(lambda r: self.status_dot.setText(
             f"● Conectado" if r.get("ok") else f"● Error"
         ))
@@ -2210,10 +2236,45 @@ class MainWindow(QMainWindow):
         worker.start()
         self._ping_worker = worker
 
+    def _do_logout(self):
+        reply = QMessageBox.question(
+            self, 'Cerrar Sesión',
+            '¿Estás seguro de que deseas cerrar sesión?\nTus asientos seleccionados quedarán reservados para ti hasta que expire el TTL.',
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, QMessageBox.StandardButton.No
+        )
+        if reply == QMessageBox.StandardButton.Yes:
+            worker = NetworkWorker(release_session, SESSION_ID)
+            worker.result.connect(lambda _: self._go_to_login())
+            worker.error.connect(lambda _: self._go_to_login())
+            worker.start()
+
+    def _go_to_login(self):
+        """Vuelve a la pantalla de login dentro del mismo proceso — sin restart."""
+        self.ping_timer.stop()
+        self.tab_reserve.reset()
+        # Limpiar el formulario de login
+        self.inp_login_usr.clear()
+        self.inp_login_pwd.clear()
+        self.lbl_auth_err.setText("")
+        self.btn_login.setEnabled(True)
+        self.btn_login.setText("Iniciar Sesión")
+        self.btn_register.setEnabled(True)
+        self.btn_register.setText("Crear Cuenta")
+        self._stack.setCurrentIndex(0)
+
+    def _enter_main_page(self):
+        """Activa la página principal y reanuda timers al hacer login."""
+        self._stack.setCurrentIndex(1)
+        if not self.ping_timer.isActive():
+            self.ping_timer.start(8000)
+        # Reanudar TTL sync en ReserveTab para re-login dentro del mismo proceso
+        self.tab_reserve._sync_ttl_from_server()
+
     def closeEvent(self, event):
         """
-        Al cerrar la ventana, notificar al servidor para que libere
-        todos los asientos asociados a esta sesión (pre-seleccionados y reservados).
+        Al cerrar la ventana con la X, solo liberamos el tracking de sesión activa.
+        Los holds (SELECTED) y reservas (RESERVED) permanecen en el servidor
+        con su TTL intacto — el usuario los verá al reingresar.
         """
         try:
             release_session(SESSION_ID)

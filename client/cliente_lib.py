@@ -28,12 +28,14 @@ def send_request(request, host=None, port=None):
     if port is None:
         port = DEFAULT_PORT
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.settimeout(10)
+        # TCP_NODELAY: desactiva el algoritmo de Nagle para envío inmediato
+        s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        s.settimeout(15)
         s.connect((host, port))
         s.sendall(json.dumps(request).encode() + b"\n")
         data = b""
         while True:
-            chunk = s.recv(4096)
+            chunk = s.recv(65536)   # buffer grande: menos viajes de red
             if not chunk:
                 break
             data += chunk
@@ -42,30 +44,35 @@ def send_request(request, host=None, port=None):
     return json.loads(data.decode().strip())
 
 
-def check(zone_id, host=None, port=None):
-    return send_request({"action": "check", "zone_id": zone_id}, host, port)
+def check(zone_id, session_id=None, host=None, port=None):
+    req = {"action": "check", "zone_id": zone_id}
+    if session_id:
+        req["session_id"] = session_id
+    return send_request(req, host, port)
 
 
-def login(username, password, host=None, port=None):
+def login(username, password, session_id=None, host=None, port=None):
     """
     Autentica al usuario contra el servidor.
     Solo envia el hash SHA-256 de la contrasena, nunca el texto plano.
+    Incluye session_id para que el servidor re-asocie holds/reservas previas al nuevo session.
     """
-    return send_request(
-        {"action": "login", "username": username, "pw_hash": _hash_pw(password)},
-        host, port
-    )
+    req = {"action": "login", "username": username, "pw_hash": _hash_pw(password)}
+    if session_id:
+        req["session_id"] = session_id
+    return send_request(req, host, port)
 
 
-def register(username, password, host=None, port=None):
+def register(username, password, session_id=None, host=None, port=None):
     """
     Registra un nuevo usuario en el servidor.
     Solo envia el hash SHA-256 de la contrasena, nunca el texto plano.
+    Incluye session_id para que el servidor registre la sesión activa desde el inicio.
     """
-    return send_request(
-        {"action": "register", "username": username, "pw_hash": _hash_pw(password)},
-        host, port
-    )
+    req = {"action": "register", "username": username, "pw_hash": _hash_pw(password)}
+    if session_id:
+        req["session_id"] = session_id
+    return send_request(req, host, port)
 
 
 def select_seat(zone_id, row, col, session_id, host=None, port=None):
@@ -131,8 +138,11 @@ def get_ttl(session_id, host=None, port=None):
     )
 
 
-def global_state(host=None, port=None):
-    return send_request({"action": "global_state"}, host, port)
+def global_state(session_id=None, host=None, port=None):
+    req = {"action": "global_state"}
+    if session_id:
+        req["session_id"] = session_id
+    return send_request(req, host, port)
 
 
 def get_log(host=None, port=None):

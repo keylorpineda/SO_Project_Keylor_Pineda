@@ -3,6 +3,7 @@ import threading
 import json
 import sys
 import os
+from concurrent.futures import ThreadPoolExecutor
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from recursos import ConcertSystem, ZONE_CONFIG
@@ -26,9 +27,11 @@ def handle_client(conn, addr, system, auth):
     """
     try:
         with conn:
+            # TCP_NODELAY: envíos sin latencia
+            conn.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
             data = b""
             while True:
-                chunk = conn.recv(4096)
+                chunk = conn.recv(65536)
                 if not chunk:
                     break
                 data += chunk
@@ -65,6 +68,11 @@ def process_request(request, system, auth):
         pw_hash  = request.get("pw_hash", "")
         ok, result = auth.login(username, pw_hash)
         if ok:
+            # result contiene el username real. Registramos la sesión para evitar logins dobles.
+            if session_id:
+                reg_ok, err = system.register_session(session_id, result)
+                if not reg_ok:
+                    return {"ok": False, "error": err}
             return {"ok": True, "username": result}
         return {"ok": False, "error": result}
 
@@ -73,6 +81,8 @@ def process_request(request, system, auth):
         pw_hash  = request.get("pw_hash", "")
         ok, result = auth.register(username, pw_hash)
         if ok:
+            if session_id:
+                system.register_session(session_id, result)
             return {"ok": True, "username": result}
         return {"ok": False, "error": result}
 
@@ -82,7 +92,12 @@ def process_request(request, system, auth):
         state, err = system.check_availability(zone_id)
         if err:
             return {"ok": False, "error": err}
-        return {"ok": True, "state": state}
+        return {
+            "ok": True,
+            "state": state,
+            "my_reservations": system.get_my_reservations(session_id),
+            "my_holds": system.get_my_holds(session_id),
+        }
 
     elif action == "select":
         # Pre-selecciona un asiento: AVAILABLE → SELECTED (bloqueo temporal)
@@ -157,7 +172,12 @@ def process_request(request, system, auth):
         return {"ok": True, "remaining": remaining}
 
     elif action == "global_state":
-        return {"ok": True, "state": system.get_global_state()}
+        return {
+            "ok": True,
+            "state": system.get_global_state(),
+            "my_reservations": system.get_my_reservations(session_id),
+            "my_holds": system.get_my_holds(session_id),
+        }
 
     elif action == "log":
         return {"ok": True, "log": system.get_log()}
@@ -191,7 +211,7 @@ def start_server():
     srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     srv.bind((HOST, PORT))
-    srv.listen(128)  # Permite encolar hasta 128 peticiones simultáneas
+    srv.listen(1024)  # Permite encolar hasta 1024 peticiones simultáneas
 
     local_ip = get_local_ip()
     os.system("") # Habilitar colores ANSI en Windows
@@ -213,17 +233,11 @@ def start_server():
     print()
 
     try:
-        while True:
-            conn, addr = srv.accept()
-            # Creación Dinámica de Hilos:
-            # Por cada conexión entrante, se crea un hilo (Thread) nuevo.
-            # daemon=True garantiza que si el hilo principal muere, los hijos también.
-            thread = threading.Thread(
-                target=handle_client,
-                args=(conn, addr, system, auth),
-                daemon=True
-            )
-            thread.start()
+        with ThreadPoolExecutor(max_workers=2000) as executor:
+            while True:
+                conn, addr = srv.accept()
+                # Delegamos la conexión al pool de hilos en lugar de crear uno nuevo infinito
+                executor.submit(handle_client, conn, addr, system, auth)
     except KeyboardInterrupt:
         print("\nServidor detenido.")
     finally:

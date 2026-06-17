@@ -19,6 +19,8 @@ class TTLManager(threading.Thread):
         while self._running:
             time.sleep(self.interval)
             self.system.process_expirations()
+            if self.system._is_dirty:
+                self.system._save_state_to_disk()
 
     def stop(self):
         self._running = False

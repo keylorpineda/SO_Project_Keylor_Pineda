@@ -30,18 +30,18 @@ TEXT_MUTED = "#64748b"
 
 ZONE_NAMES = {
     0: "VIP",
-    1: "Platea Norte",
-    2: "Platea Sur",
-    3: "Tribuna Este",
-    4: "Tribuna Oeste",
+    1: "Preferencial Norte",
+    2: "Preferencial Sur",
+    3: "General Oeste",
+    4: "General Este",
 }
 
 ZONE_DIMS = {
-    0: (5, 10),
-    1: (10, 10),
-    2: (10, 10),
-    3: (10, 20),
-    4: (15, 20),
+    0: (2, 10),
+    1: (10, 12),
+    2: (10, 12),
+    3: (15, 10),
+    4: (15, 10),
 }
 
 
@@ -158,7 +158,7 @@ class GeneratorApp(QMainWindow):
         zone_inner.setSpacing(4)
         self.chk_all_zones = QCheckBox("Todas las zonas")
         self.chk_all_zones.setChecked(True)
-        self.chk_all_zones.toggled.connect(self._toggle_zone_checks)
+        self.chk_all_zones.clicked.connect(self._toggle_all)
         zone_inner.addWidget(self.chk_all_zones)
         line = QFrame()
         line.setFrameShape(QFrame.Shape.HLine)
@@ -167,8 +167,8 @@ class GeneratorApp(QMainWindow):
         self.zone_checks = {}
         for zid, zname in ZONE_NAMES.items():
             chk = QCheckBox(f"Zona {zid}: {zname}")
-            chk.setChecked(False)
-            chk.setEnabled(False)
+            chk.setChecked(True)
+            chk.clicked.connect(self._check_individual)
             self.zone_checks[zid] = chk
             zone_inner.addWidget(chk)
         cfg_row.addWidget(zone_grp)
@@ -193,30 +193,30 @@ class GeneratorApp(QMainWindow):
         self.spin_conflict = QSpinBox()
         self.spin_conflict.setRange(2, 500)
         self.spin_conflict.setValue(50)
-        self.spin_conflict.setSuffix(" usuarios")
         params_grid.addWidget(self.spin_conflict, 1, 1)
 
         params_grid.addWidget(QLabel("Usuarios carga masiva:"), 2, 0)
         self.spin_load = QSpinBox()
         self.spin_load.setRange(5, 2000)
         self.spin_load.setValue(100)
-        self.spin_load.setSuffix(" usuarios")
         params_grid.addWidget(self.spin_load, 2, 1)
 
-        params_grid.addWidget(QLabel("Demora por usuario (ms):"), 3, 0)
-        self.spin_delay = QSpinBox()
-        self.spin_delay.setRange(0, 5000)
-        self.spin_delay.setValue(500)
-        self.spin_delay.setSuffix(" ms")
-        params_grid.addWidget(self.spin_delay, 3, 1)
+        # Explicación de las categorías
+        lbl_info_conf = QLabel("Conflicto: Simula N usuarios intentando comprar el MISMO asiento al MISMO tiempo.")
+        lbl_info_conf.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
+        lbl_info_load = QLabel("Carga masiva: Simula N usuarios comprando asientos aleatorios para estresar el servidor.")
+        lbl_info_load.setStyleSheet(f"color: {TEXT_MUTED}; font-size: 11px;")
+        
+        params_grid.addWidget(lbl_info_conf, 3, 0, 1, 2)
+        params_grid.addWidget(lbl_info_load, 4, 0, 1, 2)
 
         self.chk_confirm_random = QCheckBox("Confirmar/Cancelar aleatoriamente")
         self.chk_confirm_random.setChecked(True)
-        params_grid.addWidget(self.chk_confirm_random, 4, 0, 1, 2)
+        params_grid.addWidget(self.chk_confirm_random, 5, 0, 1, 2)
 
         self.chk_gen_pdf = QCheckBox("Generar PDF de evidencia")
         self.chk_gen_pdf.setChecked(True)
-        params_grid.addWidget(self.chk_gen_pdf, 5, 0, 1, 2)
+        params_grid.addWidget(self.chk_gen_pdf, 6, 0, 1, 2)
 
         cfg_row.addWidget(params_grp, 1)
         root.addLayout(cfg_row)
@@ -270,11 +270,13 @@ class GeneratorApp(QMainWindow):
         console_layout.addWidget(self.console_output)
         root.addWidget(console_frame, 1)
 
-    def _toggle_zone_checks(self, checked):
+    def _toggle_all(self, checked):
         for chk in self.zone_checks.values():
-            chk.setEnabled(not checked)
-            if checked:
-                chk.setChecked(False)
+            chk.setChecked(checked)
+
+    def _check_individual(self):
+        all_checked = all(chk.isChecked() for chk in self.zone_checks.values())
+        self.chk_all_zones.setChecked(all_checked)
 
     def _update_params_visibility(self, idx):
         mode = self.cmb_mode.currentIndex()
@@ -320,7 +322,6 @@ class GeneratorApp(QMainWindow):
         mode       = self.cmb_mode.currentIndex()
         n_conflict = self.spin_conflict.value() if mode in (0, 2) else 0
         n_load     = self.spin_load.value()     if mode in (1, 2) else 0
-        delay_ms   = self.spin_delay.value()
         confirm_rnd = self.chk_confirm_random.isChecked()
         gen_pdf    = self.chk_gen_pdf.isChecked()
 
@@ -329,7 +330,7 @@ class GeneratorApp(QMainWindow):
         self.btn_stop.setEnabled(True)
 
         self._runner = _TestRunner(
-            lambda: self._test_fn(zones, mode, n_conflict, n_load, delay_ms, confirm_rnd, gen_pdf),
+            lambda: self._test_fn(zones, mode, n_conflict, n_load, confirm_rnd, gen_pdf),
             self
         )
         self._runner.line_ready.connect(self._log)
@@ -355,7 +356,7 @@ class GeneratorApp(QMainWindow):
         self._log("\n" + msg + "\n")
 
     # ── Lógica de prueba ─────────────────────────────────────────────────────
-    def _test_fn(self, zones, mode, n_conflict, n_load, delay_ms, confirm_rnd, gen_pdf):
+    def _test_fn(self, zones, mode, n_conflict, n_load, confirm_rnd, gen_pdf):
         import threading, random
         from client.cliente_lib import reserve, confirm, cancel, global_state
         try:
@@ -375,7 +376,7 @@ class GeneratorApp(QMainWindow):
                 results.append(entry)
             print(entry)
 
-        def simulated_user(uid, zone_id, row, col, delay_s, do_confirm_rnd):
+        def simulated_user(uid, zone_id, row, col, do_confirm_rnd):
             try:
                 resp = reserve(zone_id, row, col)
                 if resp["ok"]:
@@ -383,7 +384,6 @@ class GeneratorApp(QMainWindow):
                     log(f"[OK] {uid} reservó Z{zone_id} F{row}C{col} → TX:{tx_id}")
                     with results_lock:
                         stats["ok"] += 1
-                    time.sleep(delay_s)
                     if do_confirm_rnd:
                         action = random.choices(["confirm", "cancel"], weights=[70, 30])[0]
                     else:
@@ -416,8 +416,6 @@ class GeneratorApp(QMainWindow):
             elapsed = time.time() - start
             print(f"  Completado en {elapsed:.2f}s con {len(threads)} hilos")
 
-        delay_s = delay_ms / 1000.0
-
         # Escenario 1: Conflicto (muchos usuarios compitiendo por el mismo asiento)
         if mode in (0, 2) and n_conflict > 0:
             for zone_id in zones:
@@ -427,7 +425,7 @@ class GeneratorApp(QMainWindow):
                 threads = [
                     threading.Thread(
                         target=simulated_user,
-                        args=(f"C{i:03d}", zone_id, row_target, col_target, delay_s, confirm_rnd),
+                        args=(f"C{i:03d}", zone_id, row_target, col_target, confirm_rnd),
                         daemon=True,
                     )
                     for i in range(n_conflict)
@@ -449,7 +447,7 @@ class GeneratorApp(QMainWindow):
                 load_threads.append(
                     threading.Thread(
                         target=simulated_user,
-                        args=(f"R{i:03d}", zone_id, r, c, delay_s, confirm_rnd),
+                        args=(f"R{i:03d}", zone_id, r, c, confirm_rnd),
                         daemon=True,
                     )
                 )

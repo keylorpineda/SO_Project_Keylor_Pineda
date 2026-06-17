@@ -1,0 +1,37 @@
+# Compilados de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Compilados y artefactos de PyInstaller
+build_tmp/
+dist/
+*.spec
+*.exe
+*.app
+
+# Archivos temporales y de estado de la aplicación
+.session_id
+server_state.json
+server_state.json.tmp
+*.tmp
+
+# Logs de prueba
+logs_prueba_concurrente.txt
+*.log
+
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+.gemini/
+
+# Artefactos
+implementation_plan.md
+task.md
+walkthrough.md
